@@ -1,0 +1,21 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: go_crud
+    environment:
+      DB_HOST: central_mysql
+      DB_PORT: "3306"
+      DB_USER: admin
+      DB_PASSWORD: admin123
+      DB_NAME: go
+    ports:
+      - "8004:8004"
+    restart: always
+    networks:
+      - database_db_network
+
+networks:
+  database_db_network:
+    external: true
