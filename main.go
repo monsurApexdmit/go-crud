@@ -11,13 +11,9 @@ import (
 	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
+	"go-crud/models"
 )
 
-type Book struct {
-	ID     int64  `json:"id"`
-	Title  string `json:"title"`
-	Author string `json:"author"`
-}
 
 var db *sql.DB
 
@@ -88,9 +84,9 @@ func listBooks(w http.ResponseWriter) {
 	}
 	defer rows.Close()
 
-	var books []Book
+	var books []models.Book
 	for rows.Next() {
-		var b Book
+		var b models.Book
 		rows.Scan(&b.ID, &b.Title, &b.Author)
 		books = append(books, b)
 	}
@@ -99,7 +95,7 @@ func listBooks(w http.ResponseWriter) {
 }
 
 func getBook(w http.ResponseWriter, id int64) {
-	var b Book
+	var b models.Book
 	err := db.QueryRow("SELECT id, title, author FROM books WHERE id = ?", id).Scan(
 		&b.ID, &b.Title, &b.Author,
 	)
@@ -112,7 +108,7 @@ func getBook(w http.ResponseWriter, id int64) {
 }
 
 func createBook(w http.ResponseWriter, r *http.Request) {
-	var b Book
+	var b models.Book
 	json.NewDecoder(r.Body).Decode(&b)
 
 	res, err := db.Exec("INSERT INTO books (title, author) VALUES (?, ?)", b.Title, b.Author)
@@ -129,7 +125,7 @@ func createBook(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateBook(w http.ResponseWriter, r *http.Request, id int64) {
-	var b Book
+	var b models.Book
 	json.NewDecoder(r.Body).Decode(&b)
 
 	_, err := db.Exec("UPDATE books SET title=?, author=? WHERE id=?",
