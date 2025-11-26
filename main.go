@@ -12,31 +12,11 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"go-crud/models"
+	"go-crud/database"
 )
 
-
-var db *sql.DB
-
 func main() {
-	var err error
-
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbUser := os.Getenv("DB_USER")
-	dbPass := os.Getenv("DB_PASSWORD")
-	dbName := os.Getenv("DB_NAME")
-
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
-		dbUser, dbPass, dbHost, dbPort, dbName)
-
-	db, err = sql.Open("mysql", dsn)
-	if err != nil {
-		log.Fatal("Error connecting to DB: ", err)
-	}
-
-	if err = db.Ping(); err != nil {
-		log.Fatal("Database unreachable: ", err)
-	}
+	database.Connect()
 
 	http.HandleFunc("/books", booksHandler)
 	http.HandleFunc("/books/", bookHandler)
@@ -77,7 +57,7 @@ func bookHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func listBooks(w http.ResponseWriter) {
-	rows, err := db.Query("SELECT id, title, author FROM books")
+	rows, err := database.DB.Query("SELECT id, title, author FROM books")
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -96,7 +76,7 @@ func listBooks(w http.ResponseWriter) {
 
 func getBook(w http.ResponseWriter, id int64) {
 	var b models.Book
-	err := db.QueryRow("SELECT id, title, author FROM books WHERE id = ?", id).Scan(
+	err := database.DB.QueryRow("SELECT id, title, author FROM books WHERE id = ?", id).Scan(
 		&b.ID, &b.Title, &b.Author,
 	)
 	if err != nil {
@@ -111,7 +91,7 @@ func createBook(w http.ResponseWriter, r *http.Request) {
 	var b models.Book
 	json.NewDecoder(r.Body).Decode(&b)
 
-	res, err := db.Exec("INSERT INTO books (title, author) VALUES (?, ?)", b.Title, b.Author)
+	res, err := database.DB.Exec("INSERT INTO books (title, author) VALUES (?, ?)", b.Title, b.Author)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -128,7 +108,7 @@ func updateBook(w http.ResponseWriter, r *http.Request, id int64) {
 	var b models.Book
 	json.NewDecoder(r.Body).Decode(&b)
 
-	_, err := db.Exec("UPDATE books SET title=?, author=? WHERE id=?",
+	_, err := database.DB.Exec("UPDATE books SET title=?, author=? WHERE id=?",
 		b.Title, b.Author, id,
 	)
 	if err != nil {
@@ -141,7 +121,7 @@ func updateBook(w http.ResponseWriter, r *http.Request, id int64) {
 }
 
 func deleteBook(w http.ResponseWriter, id int64) {
-	_, err := db.Exec("DELETE FROM books WHERE id=?", id)
+	_, err := database.DB.Exec("DELETE FROM books WHERE id=?", id)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
