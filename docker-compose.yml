@@ -2,7 +2,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: go_crud
     environment:
       DB_HOST: central_mysql
@@ -12,6 +12,9 @@ services:
       DB_NAME: go
     ports:
       - "8004:8004"
+    volumes:
+      - .:/app              # Mount source code for hot reload
+      - /app/tmp            # Exclude tmp
     restart: always
     networks:
       - database_db_network

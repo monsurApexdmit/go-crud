@@ -1,0 +1,16 @@
+FROM golang:1.22-alpine
+
+WORKDIR /app
+
+# Install CompileDaemon for hot reload
+RUN go install github.com/githubnemo/CompileDaemon@latest
+
+COPY go.mod go.sum* ./
+RUN go mod download
+
+COPY . .
+
+EXPOSE 8004
+
+# Use CompileDaemon for hot reload
+CMD ["CompileDaemon", "-build=go build -o main main.go", "-command=./main"]

@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY go.mod ./
 # Copy go.sum only if it exists
-COPY go.su[m] ./
+COPY go.sum ./
 RUN go mod download
 
 COPY . .
