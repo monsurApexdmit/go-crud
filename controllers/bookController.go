@@ -1,108 +1,65 @@
 package controllers
 
 import (
-	"encoding/json"
+    "encoding/json"
+    "net/http"
+    // "strconv"
 
-	"net/http"
-	"strconv"
-
-	"github.com/go-chi/chi/v5"
-	"go-crud/database"
-	"go-crud/models"
+    "github.com/go-chi/chi/v5"
+    "go-crud/database"
+    "go-crud/models"
 )
 
 func ListBooks(w http.ResponseWriter, r *http.Request) {
-
-	rows, err := database.DB.Query("SELECT id, title, author FROM books")
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-	defer rows.Close()
-
-	var books []models.Book
-	for rows.Next() {
-		var b models.Book
-		rows.Scan(&b.ID, &b.Title, &b.Author)
-		books = append(books, b)
-	}
-
-	json.NewEncoder(w).Encode(books)
+    var books []models.Book
+    database.DB.Find(&books)
+    json.NewEncoder(w).Encode(books)
 }
 
 func GetBook(w http.ResponseWriter, r *http.Request) {
-	idStr := chi.URLParam(r, "id")
-	id, err := strconv.ParseInt(idStr, 10, 64)
-	if err != nil {
-		http.Error(w, "invalid id", 400)
-		return
-	}
+    id := chi.URLParam(r, "id")
+    var book models.Book
 
-	var b models.Book
-	err = database.DB.QueryRow("SELECT id, title, author FROM books WHERE id = ?", id).Scan(
-		&b.ID, &b.Title, &b.Author,
-	)
-	if err != nil {
-		http.Error(w, "not found", 404)
-		return
-	}
+    if err := database.DB.First(&book, id).Error; err != nil {
+        http.Error(w, "Book not found", 404)
+        return
+    }
 
-	json.NewEncoder(w).Encode(b)
+    json.NewEncoder(w).Encode(book)
 }
 
 func CreateBook(w http.ResponseWriter, r *http.Request) {
-	var b models.Book
-	json.NewDecoder(r.Body).Decode(&b)
+    var book models.Book
+    json.NewDecoder(r.Body).Decode(&book)
 
-	res, err := database.DB.Exec("INSERT INTO books (title, author) VALUES (?, ?)", b.Title, b.Author)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
+    database.DB.Create(&book)
 
-	id, _ := res.LastInsertId()
-	b.ID = id
-
-	w.WriteHeader(201)
-	json.NewEncoder(w).Encode(b)
+    w.WriteHeader(201)
+    json.NewEncoder(w).Encode(book)
 }
 
 func UpdateBook(w http.ResponseWriter, r *http.Request) {
-	idStr := chi.URLParam(r, "id")
-	id, err := strconv.ParseInt(idStr, 10, 64)
-	if err != nil {
-		http.Error(w, "invalid id", 400)
-		return
-	}
+    id := chi.URLParam(r, "id")
+    var book models.Book
 
-	var b models.Book
-	json.NewDecoder(r.Body).Decode(&b)
+    if err := database.DB.First(&book, id).Error; err != nil {
+        http.Error(w, "Book not found", 404)
+        return
+    }
 
-	_, err = database.DB.Exec("UPDATE books SET title=?, author=? WHERE id=?",
-		b.Title, b.Author, id,
-	)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
+    json.NewDecoder(r.Body).Decode(&book)
+    database.DB.Save(&book)
 
-	b.ID = id
-	json.NewEncoder(w).Encode(b)
+    json.NewEncoder(w).Encode(book)
 }
 
 func DeleteBook(w http.ResponseWriter, r *http.Request) {
-	idStr := chi.URLParam(r, "id")
-	id, err := strconv.ParseInt(idStr, 10, 64)
-	if err != nil {
-		http.Error(w, "invalid id", 400)
-		return
-	}
+    id := chi.URLParam(r, "id")
 
-	_, err = database.DB.Exec("DELETE FROM books WHERE id=?", id)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
+    if err := database.DB.Delete(&models.Book{}, id).Error; err != nil {
+        http.Error(w, err.Error(), 500)
+        return
+    }
 
-	w.WriteHeader(204)
+    w.WriteHeader(204)
 }

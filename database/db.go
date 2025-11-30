@@ -1,38 +1,40 @@
 package database
 
 import (
-	"database/sql"
-	"fmt"
-	"log"
+    "fmt"
+    "log"
+    "os"
 
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/joho/godotenv"
-	"os"
+    "gorm.io/driver/mysql"
+    "gorm.io/gorm"
+    "github.com/joho/godotenv"
+    "go-crud/models"
 )
 
-var DB *sql.DB
+var DB *gorm.DB
 
 func Connect() {
-	godotenv.Load()
+    godotenv.Load()
 
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbUser := os.Getenv("DB_USER")
-	dbPass := os.Getenv("DB_PASSWORD")
-	dbName := os.Getenv("DB_NAME")
+    dbHost := os.Getenv("DB_HOST")
+    dbPort := os.Getenv("DB_PORT")
+    dbUser := os.Getenv("DB_USER")
+    dbPass := os.Getenv("DB_PASSWORD")
+    dbName := os.Getenv("DB_NAME")
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
-		dbUser, dbPass, dbHost, dbPort, dbName)
+    dsn := fmt.Sprintf(
+        "%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+        dbUser, dbPass, dbHost, dbPort, dbName,
+    )
 
-	var err error
-	DB, err = sql.Open("mysql", dsn)
-	if err != nil {
-		log.Fatal("Error connecting to DB:", err)
-	}
+    var err error
+    DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+    if err != nil {
+        log.Fatal("Failed to connect to database:", err)
+    }
 
-	if err = DB.Ping(); err != nil {
-		log.Fatal("Database unreachable:", err)
-	}
+    log.Println("Database connected using GORM")
 
-	log.Println("Database connected")
+    // Auto migrate tables
+    DB.AutoMigrate(&models.Book{})
 }
