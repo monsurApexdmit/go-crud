@@ -3,7 +3,6 @@ package controllers
 import (
     "encoding/json"
     "net/http"
-    // "strconv"
 
     "github.com/go-chi/chi/v5"
     "go-crud/database"
@@ -12,17 +11,12 @@ import (
 
 func ListBooks(w http.ResponseWriter, r *http.Request) {
     var books []models.Book
-    database.DB.Find(&books)
-
-    response := models.Response{
-        Status:  http.StatusOK,
-        Message: "Books retrieved successfully",
-        Data:    books,
+    if err := database.DB.Find(&books).Error; err != nil {
+        writeError(w, http.StatusInternalServerError, "Failed to retrieve books")
+        return
     }
 
-    w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(http.StatusOK)
-    json.NewEncoder(w).Encode(response)
+    writeJSON(w, http.StatusOK, "Books retrieved successfully", books)
 }
 
 func GetBook(w http.ResponseWriter, r *http.Request) {
@@ -30,104 +24,83 @@ func GetBook(w http.ResponseWriter, r *http.Request) {
     var book models.Book
 
     if err := database.DB.First(&book, id).Error; err != nil {
-        response := models.Response{
-            Status:  404,
-            Message: "Book not found",
-            Data:    nil,
-        }
-
-        w.Header().Set("Content-Type", "application/json")
-        w.WriteHeader(http.StatusNotFound)
-        json.NewEncoder(w).Encode(response)
+        writeError(w, http.StatusNotFound, "Book not found")
         return
     }
 
-    response := models.Response{
-        Status:  200,
-        Message: "Book fetched successfully",
-        Data:    book,
-    }
-
-    w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(http.StatusOK)
-    json.NewEncoder(w).Encode(response)
+    writeJSON(w, http.StatusOK, "Book fetched successfully", book)
 }
-
 
 func CreateBook(w http.ResponseWriter, r *http.Request) {
     var book models.Book
-    json.NewDecoder(r.Body).Decode(&book)
 
-    database.DB.Create(&book)
-
-    response := models.Response{
-        Status:  201,
-        Message: "Book created successfully",
-        Data:    book,
+    if err := json.NewDecoder(r.Body).Decode(&book); err != nil {
+        writeError(w, http.StatusBadRequest, "Invalid JSON body")
+        return
     }
 
-    w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(http.StatusCreated)
-    json.NewEncoder(w).Encode(response)
-}
+    if err := database.DB.Create(&book).Error; err != nil {
+        writeError(w, http.StatusInternalServerError, "Failed to create book")
+        return
+    }
 
+    writeJSON(w, http.StatusCreated, "Book created successfully", book)
+}
 
 func UpdateBook(w http.ResponseWriter, r *http.Request) {
     id := chi.URLParam(r, "id")
     var book models.Book
 
     if err := database.DB.First(&book, id).Error; err != nil {
-        response := models.Response{
-            Status:  404,
-            Message: "Book not found",
-            Data:    nil,
-        }
-
-        w.Header().Set("Content-Type", "application/json")
-        w.WriteHeader(http.StatusNotFound)
-        json.NewEncoder(w).Encode(response)
+        writeError(w, http.StatusNotFound, "Book not found")
         return
     }
 
-    json.NewDecoder(r.Body).Decode(&book)
-    database.DB.Save(&book)
-
-    response := models.Response{
-        Status:  200,
-        Message: "Book updated successfully",
-        Data:    book,
+    var updatedData models.Book
+    if err := json.NewDecoder(r.Body).Decode(&updatedData); err != nil {
+        writeError(w, http.StatusBadRequest, "Invalid JSON body")
+        return
     }
 
-    w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(http.StatusOK)
-    json.NewEncoder(w).Encode(response)
-}
+    // Update fields manually (recommended)
+    book.Title = updatedData.Title
+    book.Author = updatedData.Author
 
+    if err := database.DB.Save(&book).Error; err != nil {
+        writeError(w, http.StatusInternalServerError, "Failed to update book")
+        return
+    }
+
+    writeJSON(w, http.StatusOK, "Book updated successfully", book)
+}
 
 func DeleteBook(w http.ResponseWriter, r *http.Request) {
     id := chi.URLParam(r, "id")
 
     if err := database.DB.Delete(&models.Book{}, id).Error; err != nil {
-        response := models.Response{
-            Status:  500,
-            Message: "Failed to delete book",
-            Data:    nil,
-        }
-
-        w.Header().Set("Content-Type", "application/json")
-        w.WriteHeader(http.StatusInternalServerError)
-        json.NewEncoder(w).Encode(response)
+        writeError(w, http.StatusInternalServerError, "Failed to delete book")
         return
     }
 
-    response := models.Response{
-        Status:  204,
-        Message: "Book deleted successfully",
-        Data:    nil,
-    }
-
-    w.Header().Set("Content-Type", "application/json")
+    // No body should be sent for 204 response
     w.WriteHeader(http.StatusNoContent)
-    json.NewEncoder(w).Encode(response)
 }
 
+//
+// Helper functions
+//
+
+func writeJSON(w http.ResponseWriter, status int, message string, data interface{}) {
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(status)
+
+    json.NewEncoder(w).Encode(models.Response{
+        Status:  status,
+        Message: message,
+        Data:    data,
+    })
+}
+
+func writeError(w http.ResponseWriter, status int, msg string) {
+    writeJSON(w, status, msg, nil)
+}

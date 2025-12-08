@@ -7,14 +7,14 @@ import (
 
     "gorm.io/driver/mysql"
     "gorm.io/gorm"
-    "github.com/joho/godotenv"
+    // "github.com/joho/godotenv"
     "go-crud/models"
 )
 
 var DB *gorm.DB
 
 func Connect() {
-    godotenv.Load()
+    // godotenv.Load()  // Load .env file if needed
 
     dbHost := os.Getenv("DB_HOST")
     dbPort := os.Getenv("DB_PORT")

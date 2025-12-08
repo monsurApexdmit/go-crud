@@ -9,7 +9,7 @@ import (
 
 func main() {
     database.Connect()
-
+    database.Migrate() 
     r := routes.RegisterRoutes()
 
     log.Println("API running on :8004")
