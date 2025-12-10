@@ -24,5 +24,13 @@ func RegisterRoutes() *chi.Mux {
 		r.Delete("/{id}",controllers.DeleteUser)
 	})
 
+	r.Route("/authors",func(r chi.Router) {
+		r.Get("/",controllers.ListAuthors)
+		r.Post("/",controllers.CreateAuthor)
+		r.Get("/{id}",controllers.GetAuthor)
+		r.Put("/{id}",controllers.UpdateAuthor)
+		r.Delete("/{id}",controllers.DeleteAuthor)
+	})
+
 	return r
 }

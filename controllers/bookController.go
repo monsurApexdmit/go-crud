@@ -11,7 +11,7 @@ import (
 
 func ListBooks(w http.ResponseWriter, r *http.Request) {
     var books []models.Book
-    if err := database.DB.Find(&books).Error; err != nil {
+    if err := database.DB.Preload("Author").Find(&books).Error; err != nil {
         writeError(w, http.StatusInternalServerError, "Failed to retrieve books")
         return
     }
@@ -23,7 +23,7 @@ func GetBook(w http.ResponseWriter, r *http.Request) {
     id := chi.URLParam(r, "id")
     var book models.Book
 
-    if err := database.DB.First(&book, id).Error; err != nil {
+    if err := database.DB.Preload("Author").First(&book, id).Error; err != nil {
         writeError(w, http.StatusNotFound, "Book not found")
         return
     }
@@ -39,18 +39,34 @@ func CreateBook(w http.ResponseWriter, r *http.Request) {
         return
     }
 
+    // Check if author exists
+    var author models.Author
+    if err := database.DB.First(&author, book.AuthorID).Error; err != nil {
+        writeError(w, http.StatusBadRequest, "Author not found")
+        return
+    }
+
     if err := database.DB.Create(&book).Error; err != nil {
         writeError(w, http.StatusInternalServerError, "Failed to create book")
         return
     }
 
-    writeJSON(w, http.StatusCreated, "Book created successfully", book)
+        // Reload book with author populated
+    var createdBook models.Book
+    if err := database.DB.Preload("Author").First(&createdBook, book.ID).Error; err != nil {
+        writeError(w, http.StatusInternalServerError, "Failed to load created book")
+        return
+    }
+
+
+    writeJSON(w, http.StatusCreated, "Book created successfully", createdBook)
 }
 
 func UpdateBook(w http.ResponseWriter, r *http.Request) {
     id := chi.URLParam(r, "id")
     var book models.Book
 
+    // Check if book exists
     if err := database.DB.First(&book, id).Error; err != nil {
         writeError(w, http.StatusNotFound, "Book not found")
         return
@@ -62,17 +78,36 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    // Update fields manually (recommended)
-    book.Title = updatedData.Title
-    book.Author = updatedData.Author
+    // Validate new author
+    var author models.Author
+    if err := database.DB.First(&author, updatedData.AuthorID).Error; err != nil {
+        writeError(w, http.StatusBadRequest, "Author not found")
+        return
+    }
 
+    // Update fields
+    book.Title = updatedData.Title
+    book.AuthorID = updatedData.AuthorID
+
+    // Save updated book
     if err := database.DB.Save(&book).Error; err != nil {
         writeError(w, http.StatusInternalServerError, "Failed to update book")
         return
     }
 
-    writeJSON(w, http.StatusOK, "Book updated successfully", book)
+    // Reload book with author relationship
+    var updatedBook models.Book
+    if err := database.DB.
+        Preload("Author").
+        First(&updatedBook, book.ID).Error; err != nil {
+
+        writeError(w, http.StatusInternalServerError, "Failed to load updated book")
+        return
+    }
+
+    writeJSON(w, http.StatusOK, "Book updated successfully", updatedBook)
 }
+
 
 func DeleteBook(w http.ResponseWriter, r *http.Request) {
     id := chi.URLParam(r, "id")
