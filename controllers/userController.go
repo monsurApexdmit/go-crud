@@ -3,6 +3,7 @@ package controllers
 import (
     "encoding/json"
     "net/http"
+    "golang.org/x/crypto/bcrypt"
 
     "github.com/go-chi/chi/v5"
     "go-crud/database"
@@ -43,11 +44,19 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
         writeError(w, http.StatusBadRequest, "Username and email are required")
         return
     }
+    
+    hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+    if err != nil {
+        writeError(w, http.StatusInternalServerError, "Failed to process password")
+        return
+    }
+    user.Password = string(hashedPassword)
 
     if err := database.DB.Create(&user).Error; err != nil {
         writeError(w, http.StatusInternalServerError, "Failed to create user")
         return
     }
+    user.Password = ""
 
     writeJSON(w, http.StatusCreated, "User created successfully", user)
 }
