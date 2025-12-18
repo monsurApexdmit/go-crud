@@ -64,7 +64,6 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
     id := chi.URLParam(r, "id")
     var user models.User
-
     if err := database.DB.First(&user, id).Error; err != nil {
         writeError(w, http.StatusNotFound, "User not found")
         return
@@ -79,13 +78,28 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
     user.Username = updatedData.Username
     user.Email = updatedData.Email
 
+    if updatedData.Password != "" {
+        hashedPassword, err := bcrypt.GenerateFromPassword(
+            []byte(updatedData.Password),
+            bcrypt.DefaultCost,
+        )
+        if err != nil {
+            writeError(w, http.StatusInternalServerError, "Failed to process password")
+            return
+        }
+        user.Password = string(hashedPassword)
+    }
+
     if err := database.DB.Save(&user).Error; err != nil {
         writeError(w, http.StatusInternalServerError, "Failed to update user")
         return
     }
 
+    user.Password = ""
+
     writeJSON(w, http.StatusOK, "User updated successfully", user)
 }
+
 
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
     id := chi.URLParam(r, "id")
