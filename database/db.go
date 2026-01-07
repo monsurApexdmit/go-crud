@@ -8,7 +8,7 @@ import (
     "gorm.io/driver/mysql"
     "gorm.io/gorm"
     // "github.com/joho/godotenv"
-    "go-crud/models"
+    // "go-crud/models"
 )
 
 var DB *gorm.DB
@@ -36,5 +36,5 @@ func Connect() {
     log.Println("Database connected using GORM")
 
     // Auto migrate tables
-    DB.AutoMigrate(&models.Book{})
+    // DB.AutoMigrate(&models.Book{})
 }
