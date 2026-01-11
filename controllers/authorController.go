@@ -1,76 +1,75 @@
 package controllers
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"go-crud/database"
 	"go-crud/models"
 
-	"github.com/go-chi/chi/v5"
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 
-func ListAuthors(w http.ResponseWriter, r *http.Request) {
+func ListAuthors(c *gin.Context) {
 	var authors []models.Author
 	result := database.DB.Find(&authors)
 	if result.Error != nil {
-		writeError(w, http.StatusInternalServerError, "Failed to retrieve authors")
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve authors"})
 		return
 	}
-	writeJSON(w, http.StatusOK, "Authors retrieved successfully", authors)
+	c.JSON(http.StatusOK, gin.H{"message": "Authors retrieved successfully", "data": authors})
 }
 
 
-func CreateAuthor(w http.ResponseWriter, r *http.Request) {
+func CreateAuthor(c *gin.Context) {
 	var author models.Author
 
-	if err := json.NewDecoder(r.Body).Decode(&author); err != nil {
-		writeError(w, http.StatusBadRequest, "Invalid request payload")
+	if err := c.ShouldBindJSON(&author); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
 		return
 	}
 
 	result := database.DB.Create(&author)
 
 	if result.Error != nil {
-		writeError(w, http.StatusInternalServerError, "Failed to create author")
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create author"})
 		return
 	}
 	
-	writeJSON(w, http.StatusCreated, "Author created successfully", author)
+	c.JSON(http.StatusCreated, gin.H{"message": "Author created successfully", "data": author})
 }
 
 
-func GetAuthor(w http.ResponseWriter, r *http.Request) {
-	id := chi.URLParam(r, "id")
+func GetAuthor(c *gin.Context) {
+	id := c.Param("id")
 
 
 	var author models.Author
 	result := database.DB.First(&author, id)
 	if result.Error != nil {
 		if result.Error == gorm.ErrRecordNotFound {
-			writeError(w, http.StatusNotFound, "Author not found")
+			c.JSON(http.StatusNotFound, gin.H{"error": "Author not found"})
 		} else {
-			writeError(w, http.StatusInternalServerError, "Failed to retrieve author")
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve author"})
 		}
 		return
 	}
-	writeJSON(w, http.StatusOK, "Author retrieved successfully", author)
+	c.JSON(http.StatusOK, gin.H{"message": "Author retrieved successfully", "data": author})
 }
 
-func UpdateAuthor(w http.ResponseWriter, r *http.Request) {
-	id := chi.URLParam(r, "id")
+func UpdateAuthor(c *gin.Context) {
+	id := c.Param("id")
 	var author models.Author
 
 	if err := database.DB.First(&author, id).Error; err != nil {
-		writeError(w, http.StatusNotFound, "Author not found")
+		c.JSON(http.StatusNotFound, gin.H{"error": "Author not found"})
 		return
 	}
 	
 	var updatedData models.Author
-	if err := json.NewDecoder(r.Body).Decode(&updatedData); err != nil {
-		writeError(w, http.StatusBadRequest, "Invalid JSON body")
+	if err := c.ShouldBindJSON(&updatedData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON body"})
 		return
 	}
 
@@ -78,27 +77,27 @@ func UpdateAuthor(w http.ResponseWriter, r *http.Request) {
 	author.Email = updatedData.Email
 
 	if err := database.DB.Save(&author).Error; err != nil {
-		writeError(w, http.StatusInternalServerError, "Failed to update author")
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update author"})
 		return
 	}
 
-	writeJSON(w, http.StatusOK, "Author updated successfully", author)
+	c.JSON(http.StatusOK, gin.H{"message": "Author updated successfully", "data": author})
 }
 
-func DeleteAuthor(w http.ResponseWriter, r *http.Request) {
-	id := chi.URLParam(r, "id")
+func DeleteAuthor(c *gin.Context) {
+	id := c.Param("id")
 	var author models.Author
 
 	if err := database.DB.First(&author, id).Error; err != nil {
-		writeError(w, http.StatusNotFound, "Author not found")
+		c.JSON(http.StatusNotFound, gin.H{"error": "Author not found"})
 		return
 	}
 
 	if err := database.DB.Delete(&author).Error; err != nil {
-		writeError(w, http.StatusInternalServerError, "Failed to delete author")
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete author"})
 		return
 	}
 
-	writeJSON(w, http.StatusOK, "Author deleted successfully", nil)
+	c.Status(http.StatusNoContent)
 }
 

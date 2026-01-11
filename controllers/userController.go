@@ -1,77 +1,76 @@
 package controllers
 
 import (
-    "encoding/json"
-    "net/http"
-    "golang.org/x/crypto/bcrypt"
+	"net/http"
+	"golang.org/x/crypto/bcrypt"
 
-    "github.com/go-chi/chi/v5"
-    "go-crud/database"
-    "go-crud/models"
+	"github.com/gin-gonic/gin"
+	"go-crud/database"
+	"go-crud/models"
 )
 
-func ListUsers(w http.ResponseWriter, r *http.Request) {
+func ListUsers(c *gin.Context) {
     var users []models.User
     if err := database.DB.Find(&users).Error; err != nil {
-        writeError(w, http.StatusInternalServerError, "Failed to retrieve users")
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve users"})
         return
     }
 
-    writeJSON(w, http.StatusOK, "Users retrieved successfully", users)
+    c.JSON(http.StatusOK, gin.H{"message": "Users retrieved successfully", "data": users})
 }
 
-func GetUser(w http.ResponseWriter, r *http.Request) {
-    id := chi.URLParam(r, "id")
+func GetUser(c *gin.Context) {
+    id := c.Param("id")
     var user models.User
 
     if err := database.DB.First(&user, id).Error; err != nil {
-        writeError(w, http.StatusNotFound, "User not found")
+        c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
         return
     }
 
-    writeJSON(w, http.StatusOK, "User fetched successfully", user)
+    c.JSON(http.StatusOK, gin.H{"message": "User fetched successfully", "data": user})
 }
 
-func CreateUser(w http.ResponseWriter, r *http.Request) {
+func CreateUser(c *gin.Context) {
     var user models.User
 
-    if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
-        writeError(w, http.StatusBadRequest, "Invalid JSON body")
+    if err := c.ShouldBindJSON(&user); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON body"})
         return
     }
 
     if user.Username == "" || user.Email == "" {
-        writeError(w, http.StatusBadRequest, "Username and email are required")
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Username and email are required"})
         return
     }
     
     hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
     if err != nil {
-        writeError(w, http.StatusInternalServerError, "Failed to process password")
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to process password"})
         return
     }
     user.Password = string(hashedPassword)
 
     if err := database.DB.Create(&user).Error; err != nil {
-        writeError(w, http.StatusInternalServerError, "Failed to create user")
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
         return
     }
     user.Password = ""
 
-    writeJSON(w, http.StatusCreated, "User created successfully", user)
+    c.JSON(http.StatusCreated, gin.H{"message": "User created successfully", "data": user})
 }
 
-func UpdateUser(w http.ResponseWriter, r *http.Request) {
-    id := chi.URLParam(r, "id")
+func UpdateUser(c *gin.Context) {
+    id := c.Param("id")
     var user models.User
     if err := database.DB.First(&user, id).Error; err != nil {
-        writeError(w, http.StatusNotFound, "User not found")
+        c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
         return
     }
 
     var updatedData models.User
-    if err := json.NewDecoder(r.Body).Decode(&updatedData); err != nil {
-        writeError(w, http.StatusBadRequest, "Invalid JSON body")
+    if err := c.ShouldBindJSON(&updatedData); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON body"})
         return
     }
 
@@ -84,30 +83,30 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
             bcrypt.DefaultCost,
         )
         if err != nil {
-            writeError(w, http.StatusInternalServerError, "Failed to process password")
+            c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to process password"})
             return
         }
         user.Password = string(hashedPassword)
     }
 
     if err := database.DB.Save(&user).Error; err != nil {
-        writeError(w, http.StatusInternalServerError, "Failed to update user")
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user"})
         return
     }
 
     user.Password = ""
 
-    writeJSON(w, http.StatusOK, "User updated successfully", user)
+    c.JSON(http.StatusOK, gin.H{"message": "User updated successfully", "data": user})
 }
 
 
-func DeleteUser(w http.ResponseWriter, r *http.Request) {
-    id := chi.URLParam(r, "id")
+func DeleteUser(c *gin.Context) {
+    id := c.Param("id")
 
     if err := database.DB.Delete(&models.User{}, id).Error; err != nil {
-        writeError(w, http.StatusInternalServerError, "Failed to delete user")
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete user"})
         return
     }
 
-    w.WriteHeader(http.StatusNoContent)
+    c.Status(http.StatusNoContent)
 }
