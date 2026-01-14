@@ -2,11 +2,17 @@ package routes
 
 import (
 	"go-crud/controllers"
-	"github.com/gin-gonic/gin")
+	"go-crud/middlewares"
+
+	"github.com/gin-gonic/gin"
+)
 
 
 func RegisterRoutes() *gin.Engine {
 	r := gin.Default()
+
+	r.POST("/login", controllers.Login)
+	r.POST("/logout",  middlewares.AuthMiddleware(),controllers.Logout)
 
 	r.Group("/books")
 	{
