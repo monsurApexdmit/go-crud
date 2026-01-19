@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 	"time"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -11,6 +12,8 @@ import (
 	"go-crud/models"
 	"go-crud/utils"
 )
+
+var TokenBlacklist = make(map[string]bool)
 
 type LoginRequest struct {
 	Email    string `json:"email" binding:"required,email"`
@@ -55,9 +58,20 @@ func Login(c *gin.Context) {
 }
 
 func Logout(c *gin.Context) {
-	// JWT is stateless → client just deletes token
+	authHeader := c.GetHeader("Authorization")
+
+	if authHeader == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Token missing"})
+		return
+	}
+
+	token := strings.Split(authHeader, " ")[1]
+
+	utils.TokenBlacklist[token] = true
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Logged out successfully",
 	})
 }
+
 

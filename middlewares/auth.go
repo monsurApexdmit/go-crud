@@ -32,6 +32,14 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
+		if utils.TokenBlacklist[parts[1]] {
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"error": "Token has been logged out",
+			})
+			c.Abort()
+			return
+		}
+
 		c.Set("user_id", claims["user_id"])
 		c.Next()
 	}
