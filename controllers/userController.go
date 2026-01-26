@@ -11,7 +11,7 @@ import (
 
 func ListUsers(c *gin.Context) {
     var users []models.User
-    if err := database.DB.Find(&users).Error; err != nil {
+    if err :=  database.DB.Preload("Role").Find(&users).Error; err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve users"})
         return
     }
@@ -23,7 +23,7 @@ func GetUser(c *gin.Context) {
     id := c.Param("id")
     var user models.User
 
-    if err := database.DB.First(&user, id).Error; err != nil {
+    if err := database.DB.Preload("Role").First(&user, id).Error; err != nil {
         c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
         return
     }
@@ -39,8 +39,8 @@ func CreateUser(c *gin.Context) {
         return
     }
 
-    if user.Username == "" || user.Email == "" {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Username and email are required"})
+    if user.Username == "" || user.Email == "" || user.Password == "" {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Username, email and password are required"})
         return
     }
     
@@ -55,6 +55,12 @@ func CreateUser(c *gin.Context) {
         c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
         return
     }
+
+    if err := database.DB.Preload("Role").First(&user, user.ID).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to load role"})
+		return
+	}
+
     user.Password = ""
 
     c.JSON(http.StatusCreated, gin.H{"message": "User created successfully", "data": user})
@@ -76,6 +82,7 @@ func UpdateUser(c *gin.Context) {
 
     user.Username = updatedData.Username
     user.Email = updatedData.Email
+    user.Address = updatedData.Address
 
     if updatedData.Password != "" {
         hashedPassword, err := bcrypt.GenerateFromPassword(

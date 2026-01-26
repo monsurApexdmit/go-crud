@@ -23,7 +23,8 @@ func RegisterRoutes() *gin.Engine {
 		r.DELETE("/books/:id", controllers.DeleteBook)
 	}
 
-	users := r.Group("/users", middlewares.AuthMiddleware())
+	// users := r.Group("/users", middlewares.AuthMiddleware())
+	users := r.Group("/users")
 	{
 		users.GET("/", controllers.ListUsers)
 		users.POST("/", controllers.CreateUser)
