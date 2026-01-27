@@ -74,36 +74,35 @@ func UpdateUser(c *gin.Context) {
         return
     }
 
-    var updatedData models.User
-    if err := c.ShouldBindJSON(&updatedData); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON body"})
+    var data map[string]interface{}
+    if err := c.ShouldBindJSON(&data); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON"})
         return
     }
 
-    user.Username = updatedData.Username
-    user.Email = updatedData.Email
-    user.Address = updatedData.Address
-
-    if updatedData.Password != "" {
-        hashedPassword, err := bcrypt.GenerateFromPassword(
-            []byte(updatedData.Password),
+    // Handle password separately
+    if password, ok := data["password"]; ok {
+        hashed, err := bcrypt.GenerateFromPassword(
+            []byte(password.(string)),
             bcrypt.DefaultCost,
         )
         if err != nil {
-            c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to process password"})
+            c.JSON(http.StatusInternalServerError, gin.H{"error": "Password error"})
             return
         }
-        user.Password = string(hashedPassword)
+        data["password"] = string(hashed)
     }
 
-    if err := database.DB.Save(&user).Error; err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update user"})
+    if err := database.DB.Model(&user).Updates(data).Error; err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Update failed"})
         return
     }
 
     user.Password = ""
-
-    c.JSON(http.StatusOK, gin.H{"message": "User updated successfully", "data": user})
+    c.JSON(http.StatusOK, gin.H{
+        "message": "User updated successfully",
+        "data":    user,
+    })
 }
 
 

@@ -33,6 +33,14 @@ func RegisterRoutes() *gin.Engine {
 		users.DELETE("/:id", controllers.DeleteUser)
 	}
 
+	categories := r.Group("/categories")
+	{
+		categories.GET("/", controllers.ListCategories)
+		categories.GET("/:id", controllers.GetCategory)
+		categories.POST("/", controllers.CreateCategory)
+		categories.PUT("/:id", controllers.UpdateCategory)
+		categories.DELETE("/:id", controllers.DeleteCategory)
+	}
 
 	r.Group("/authors")
 	{
