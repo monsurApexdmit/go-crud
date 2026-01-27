@@ -7,12 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
 func RegisterRoutes() *gin.Engine {
 	r := gin.Default()
 
 	r.POST("/login", controllers.Login)
-	r.POST("/logout",  middlewares.AuthMiddleware(),controllers.Logout)
+	r.POST("/logout", middlewares.AuthMiddleware(), controllers.Logout)
 
 	r.Group("/books")
 	{
@@ -49,6 +48,15 @@ func RegisterRoutes() *gin.Engine {
 		r.GET("/authors/:id", controllers.GetAuthor)
 		r.PUT("/authors/:id", controllers.UpdateAuthor)
 		r.DELETE("/authors/:id", controllers.DeleteAuthor)
+	}
+
+	attributes := r.Group("/attributes")
+	{
+		attributes.GET("/", controllers.ListAttributes)
+		attributes.POST("/", controllers.CreateAttribute)
+		attributes.GET("/:id", controllers.GetAttribute)
+		attributes.PUT("/:id", controllers.UpdateAttribute)
+		attributes.DELETE("/:id", controllers.DeleteAttribute)
 	}
 
 	return r
