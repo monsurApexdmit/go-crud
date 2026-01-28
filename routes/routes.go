@@ -41,6 +41,14 @@ func RegisterRoutes() *gin.Engine {
 		categories.DELETE("/:id", controllers.DeleteCategory)
 	}
 
+	attributes := r.Group("/attributes")
+	{
+		attributes.GET("/", controllers.ListAttributes)
+		attributes.POST("/", controllers.CreateAttribute)
+		attributes.GET("/:id", controllers.GetAttribute)
+		attributes.PUT("/:id", controllers.UpdateAttribute)
+		attributes.DELETE("/:id", controllers.DeleteAttribute)
+	}
 	r.Group("/authors")
 	{
 		r.GET("/authors/", controllers.ListAuthors)
@@ -50,14 +58,6 @@ func RegisterRoutes() *gin.Engine {
 		r.DELETE("/authors/:id", controllers.DeleteAuthor)
 	}
 
-	attributes := r.Group("/attributes")
-	{
-		attributes.GET("/", controllers.ListAttributes)
-		attributes.POST("/", controllers.CreateAttribute)
-		attributes.GET("/:id", controllers.GetAttribute)
-		attributes.PUT("/:id", controllers.UpdateAttribute)
-		attributes.DELETE("/:id", controllers.DeleteAttribute)
-	}
 
 	return r
 }
