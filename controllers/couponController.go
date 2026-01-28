@@ -5,6 +5,7 @@ import (
 
 	"go-crud/database"
 	"go-crud/models"
+	"go-crud/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,9 +35,20 @@ func GetCoupon(c *gin.Context) {
 func CreateCoupon(c *gin.Context) {
 	var coupon models.Coupon
 
-	if err := c.ShouldBindJSON(&coupon); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON body"})
+	if err := c.ShouldBind(&coupon); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid form data"})
 		return
+	}
+
+	// Handle Image Upload
+	file, err := c.FormFile("image")
+	if err == nil {
+		path, err := utils.SaveUploadedFile(c, file, "uploads/coupons")
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
+			return
+		}
+		coupon.Image = path
 	}
 
 	if err := database.DB.Create(&coupon).Error; err != nil {
@@ -57,9 +69,20 @@ func UpdateCoupon(c *gin.Context) {
 	}
 
 	var updatedData models.Coupon
-	if err := c.ShouldBindJSON(&updatedData); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON body"})
+	if err := c.ShouldBind(&updatedData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid form data"})
 		return
+	}
+
+	// Handle Image Upload
+	file, err := c.FormFile("image")
+	if err == nil {
+		path, err := utils.SaveUploadedFile(c, file, "uploads/coupons")
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
+			return
+		}
+		coupon.Image = path
 	}
 
 	// Update fields
@@ -70,7 +93,7 @@ func UpdateCoupon(c *gin.Context) {
 	coupon.StartDate = updatedData.StartDate
 	coupon.EndDate = updatedData.EndDate
 	coupon.Status = updatedData.Status
-	coupon.Image = updatedData.Image
+	// Image is already updated if a new file was uploaded
 
 	if err := database.DB.Save(&coupon).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update coupon"})
