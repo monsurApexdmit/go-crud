@@ -12,10 +12,11 @@ type Coupon struct {
 	Code         string         `json:"code" gorm:"unique" form:"code"`
 	Discount     float64        `json:"discount" form:"discount"`
 	Type         string         `json:"type" form:"type"` // percentage, fixed
-	StartDate    time.Time      `json:"start_date" form:"start_date" time_format:"2006-01-02T15:04:05Z07:00"`
-	EndDate      time.Time      `json:"end_date" form:"end_date" time_format:"2006-01-02T15:04:05Z07:00"`
+	StartDate    time.Time      `json:"start_date" gorm:"type:timestamp"`
+	EndDate      time.Time      `json:"end_date" gorm:"type:timestamp"`
 	Status       bool           `json:"status" gorm:"default:false" form:"status"`
-	Image        string         `json:"image" form:"image"`
+	Image        string         `json:"image"`
+
 	CreatedAt    time.Time      `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt    time.Time      `json:"updated_at" gorm:"autoUpdateTime"`
 	DeletedAt    gorm.DeletedAt `json:"deleted_at" gorm:"index"`
