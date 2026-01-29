@@ -58,6 +58,15 @@ func RegisterRoutes() *gin.Engine {
 		coupons.PUT("/:id", controllers.UpdateCoupon)
 		coupons.DELETE("/:id", controllers.DeleteCoupon)
 	}
+
+	locations := r.Group("/locations")
+	{
+		locations.GET("/", controllers.ListLocations)
+		locations.POST("/", controllers.CreateLocation)
+		locations.GET("/:id", controllers.GetLocation)
+		locations.PUT("/:id", controllers.UpdateLocation)
+		locations.DELETE("/:id", controllers.DeleteLocation)
+	}
 	
 	r.Group("/authors")
 	{
@@ -67,6 +76,8 @@ func RegisterRoutes() *gin.Engine {
 		r.PUT("/authors/:id", controllers.UpdateAuthor)
 		r.DELETE("/authors/:id", controllers.DeleteAuthor)
 	}
+
+
 
 
 
