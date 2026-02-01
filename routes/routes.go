@@ -68,6 +68,15 @@ func RegisterRoutes() *gin.Engine {
 		locations.DELETE("/:id", controllers.DeleteLocation)
 	}
 	
+	products := r.Group("/products")
+	{
+		products.GET("/", controllers.ListProducts)
+		products.POST("/", controllers.CreateProduct)
+		products.GET("/:id", controllers.GetProduct)
+		products.PUT("/:id", controllers.UpdateProduct)
+		products.DELETE("/:id", controllers.DeleteProduct)
+	}
+	
 	r.Group("/authors")
 	{
 		r.GET("/authors/", controllers.ListAuthors)

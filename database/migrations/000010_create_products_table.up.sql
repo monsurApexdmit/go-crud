@@ -1,0 +1,22 @@
+CREATE TABLE products (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    category_id BIGINT UNSIGNED,
+    price DECIMAL(10,2) NOT NULL DEFAULT 0,
+    sale_price DECIMAL(10,2) NOT NULL DEFAULT 0,
+    stock INT NOT NULL DEFAULT 0,
+    sku VARCHAR(255) UNIQUE,
+    barcode VARCHAR(255) UNIQUE,
+    published TINYINT(1) NOT NULL DEFAULT 0,
+    vendor_id BIGINT UNSIGNED,
+    receipt_number VARCHAR(255),
+    location_id BIGINT UNSIGNED,
+    image VARCHAR(500),
+    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL,
+    CONSTRAINT fk_products_category FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
+    CONSTRAINT fk_products_vendor FOREIGN KEY (vendor_id) REFERENCES users(id) ON DELETE SET NULL,
+    CONSTRAINT fk_products_location FOREIGN KEY (location_id) REFERENCES locations(id) ON DELETE SET NULL
+);

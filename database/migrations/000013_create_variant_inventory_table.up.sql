@@ -1,0 +1,10 @@
+CREATE TABLE variant_inventory (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    variant_id BIGINT UNSIGNED NOT NULL,
+    location_id BIGINT UNSIGNED NOT NULL,
+    quantity INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_variant_inventory_variant FOREIGN KEY (variant_id) REFERENCES product_variants(id) ON DELETE CASCADE,
+    CONSTRAINT fk_variant_inventory_location FOREIGN KEY (location_id) REFERENCES locations(id) ON DELETE CASCADE
+);
