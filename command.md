@@ -15,3 +15,10 @@ migrate \
   -database "mysql://admin:admin123@tcp(central_mysql:3306)/go" \
   -path database/migrations \
   down 1
+
+in local mysql
+migrate -database 'mysql://gocrud:StrongPass123!@tcp(localhost:3306)/go' \
+  -path database/migrations up
+
+
+
