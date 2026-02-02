@@ -14,3 +14,7 @@ type VariantInventory struct {
 	CreatedAt  time.Time `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt  time.Time `json:"updated_at" gorm:"autoUpdateTime"`
 }
+
+func (VariantInventory) TableName() string {
+	return "variant_inventory"
+}

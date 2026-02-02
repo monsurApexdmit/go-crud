@@ -34,6 +34,7 @@ type Product struct {
 	// Relationships
 	Attributes []Attribute        `gorm:"many2many:product_attributes" json:"attributes,omitempty"`
 	Variants   []ProductVariant   `gorm:"constraint:OnDelete:CASCADE" json:"variants,omitempty"`
+	Images     []ProductImage     `gorm:"constraint:OnDelete:CASCADE" json:"images,omitempty"`
 
     CreatedAt   time.Time       `json:"created_at" gorm:"autoCreateTime"`
     UpdatedAt   time.Time       `json:"updated_at" gorm:"autoUpdateTime"`
