@@ -12,7 +12,7 @@ func RegisterRoutes() *gin.Engine {
 
 	// Disable automatic redirect from /path to /path/
 	// This prevents issues with POST requests containing form data
-	r.RedirectTrailingSlash = false
+	// r.RedirectTrailingSlash = false
 
 	r.POST("/login", controllers.Login)
 	r.POST("/logout", middlewares.AuthMiddleware(), controllers.Logout)
@@ -72,15 +72,15 @@ func RegisterRoutes() *gin.Engine {
 		locations.DELETE("/:id", controllers.DeleteLocation)
 	}
 	
+	productCtrl := controllers.NewProductController()
+
 	products := r.Group("/products")
 	{
-		products.GET("/", controllers.ListProducts)
-		products.GET("", controllers.ListProducts)
-		products.POST("/", controllers.CreateProduct)
-		products.POST("", controllers.CreateProduct)
-		products.GET("/:id", controllers.GetProduct)
-		products.PUT("/:id", controllers.UpdateProduct)
-		products.DELETE("/:id", controllers.DeleteProduct)
+		products.GET("/", productCtrl.ListProducts)
+		products.POST("/", productCtrl.CreateProduct)
+		products.GET("/:id", productCtrl.GetProduct)
+		products.PUT("/:id", productCtrl.UpdateProduct)
+		products.DELETE("/:id", productCtrl.DeleteProduct)
 	}
 	
 	r.Group("/authors")
