@@ -1069,7 +1069,7 @@
             "auth": {}
         },
         {
-            "name": "Category",
+            "name": "Customers",
             "description": "",
             "item": [
                 {
@@ -1083,9 +1083,731 @@
                         "body": {},
                         "header": [],
                         "url": {
-                            "raw": "{{baseUrl}}/categories/3",
+                            "raw": "{{baseUrl}}/customers/6",
                             "path": [
-                                "categories",
+                                "customers",
+                                "6"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "DELETE",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/customers/6",
+                                    "path": [
+                                        "customers",
+                                        "6"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Get By ID",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "GET",
+                        "body": {},
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/customers/5",
+                            "path": [
+                                "customers",
+                                "5"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/customers/5",
+                                    "path": [
+                                        "customers",
+                                        "5"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "List",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "GET",
+                        "body": {},
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/customers",
+                            "path": [
+                                "customers"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/customers",
+                                    "path": [
+                                        "customers"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Store ",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"customer3\",\n  \"email\": \"customer3@example.com\",\n  \"phone\": \"555-1234\",\n  \"address\": \"123 Main St\",\n  \"city\": \"New York\",\n  \"state\": \"NY\",\n  \"zipCode\": \"10001\",\n  \"country\": \"USA\",\n  \"customerType\": \"retail\",\n  \"status\": \"active\",\n  \"notes\": \"VIP customer\",\n  \"storeCredit\": 100.00\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/customers",
+                            "path": [
+                                "customers"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/customers",
+                                    "path": [
+                                        "customers"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"john\",\n  \"email\": \"john@example.com\",\n  \"password\": \"123456\",\n  \"role_id\": 1,\n  \"address\": \"New York\"\n}\n",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Update",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "PUT",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n \"customerType\": \"wholesale\"\n}\n",
+                            "options": {
+                                "raw": {
+                                    "language": "text"
+                                }
+                            }
+                        },
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/customers/5",
+                            "path": [
+                                "customers",
+                                "5"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "PUT",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/customers/5",
+                                    "path": [
+                                        "customers",
+                                        "5"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"john2\",\n  \"email\": \"john2@example.com\"\n\n}\n",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                }
+            ],
+            "event": [
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "exec": [],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                },
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                }
+            ],
+            "auth": {}
+        },
+        {
+            "name": "Vendors",
+            "description": "",
+            "item": [
+                {
+                    "name": "Delete By ID",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "DELETE",
+                        "body": {},
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/vendors/4",
+                            "path": [
+                                "vendors",
+                                "4"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "DELETE",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/vendors/4",
+                                    "path": [
+                                        "vendors",
+                                        "4"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Get By ID",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "GET",
+                        "body": {},
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/vendors/3",
+                            "path": [
+                                "vendors",
+                                "3"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/vendors/3",
+                                    "path": [
+                                        "vendors",
+                                        "3"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "List",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "GET",
+                        "body": {},
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/vendors",
+                            "path": [
+                                "vendors"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/vendors",
+                                    "path": [
+                                        "vendors"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Store ",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Acme Corp\",\n  \"email\": \"vendor2@example.com\",\n  \"phone\": \"555-5678\",\n  \"address\": \"456 Business Ave\",\n  \"logo\": \"https://example.com/logo.png\",\n  \"status\": \"Active\",\n  \"description\": \"A reliable supplier\",\n  \"totalPaid\": 0,\n  \"amountPayable\": 0\n}\n",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/vendors",
+                            "path": [
+                                "vendors"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/vendors",
+                                    "path": [
+                                        "vendors"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"john\",\n  \"email\": \"john@example.com\",\n  \"password\": \"123456\",\n  \"role_id\": 1,\n  \"address\": \"New York\"\n}\n",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Update",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "PUT",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Acme Corp 2\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "text"
+                                }
+                            }
+                        },
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/vendors/4",
+                            "path": [
+                                "vendors",
+                                "4"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "PUT",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/vendors/4",
+                                    "path": [
+                                        "vendors",
+                                        "4"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"john2\",\n  \"email\": \"john2@example.com\"\n\n}\n",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                }
+            ],
+            "event": [
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "exec": [],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                },
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                }
+            ],
+            "auth": {}
+        },
+        {
+            "name": "Staff",
+            "description": "",
+            "item": [
+                {
+                    "name": "Staff Roles",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "GET",
+                        "body": {},
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/staff-roles",
+                            "path": [
+                                "staff-roles"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/staff-roles",
+                                    "path": [
+                                        "staff-roles"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Staff Roles  POST",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"string\",\n  \"permissions\": [\n    { \"name\": \"Dashboard\", \"read\": true, \"write\": false, \"delete\": false },\n    { \"name\": \"Products\", \"read\": true, \"write\": true, \"delete\": false },\n    { \"name\": \"Categories\", \"read\": true, \"write\": true, \"delete\": true },\n    { \"name\": \"Attributes\", \"read\": false, \"write\": false, \"delete\": false },\n    { \"name\": \"Coupons\", \"read\": false, \"write\": false, \"delete\": false },\n    { \"name\": \"Customers\", \"read\": false, \"write\": false, \"delete\": false },\n    { \"name\": \"Orders\", \"read\": false, \"write\": false, \"delete\": false },\n    { \"name\": \"POS\", \"read\": false, \"write\": false, \"delete\": false },\n    { \"name\": \"Sells\", \"read\": false, \"write\": false, \"delete\": false },\n    { \"name\": \"Staff\", \"read\": false, \"write\": false, \"delete\": false },\n    { \"name\": \"Settings\", \"read\": false, \"write\": false, \"delete\": false },\n    { \"name\": \"International\", \"read\": false, \"write\": false, \"delete\": false },\n    { \"name\": \"Store\", \"read\": false, \"write\": false, \"delete\": false },\n    { \"name\": \"Pages\", \"read\": false, \"write\": false, \"delete\": false }\n  ]\n}\n",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/staff-roles",
+                            "path": [
+                                "staff-roles"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/staff-roles",
+                                    "path": [
+                                        "staff-roles"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Delete By ID",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "DELETE",
+                        "body": {},
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/staff/3",
+                            "path": [
+                                "staff",
                                 "3"
                             ],
                             "host": [
@@ -1102,9 +1824,9 @@
                                 "method": "DELETE",
                                 "header": [],
                                 "url": {
-                                    "raw": "{{baseUrl}}/categories/3",
+                                    "raw": "{{baseUrl}}/staff/3",
                                     "path": [
-                                        "categories",
+                                        "staff",
                                         "3"
                                     ],
                                     "host": [
@@ -1134,10 +1856,10 @@
                         "body": {},
                         "header": [],
                         "url": {
-                            "raw": "{{baseUrl}}/users/1",
+                            "raw": "{{baseUrl}}/staff/4",
                             "path": [
-                                "users",
-                                "1"
+                                "staff",
+                                "4"
                             ],
                             "host": [
                                 "{{baseUrl}}"
@@ -1153,10 +1875,10 @@
                                 "method": "GET",
                                 "header": [],
                                 "url": {
-                                    "raw": "{{baseUrl}}/users/1",
+                                    "raw": "{{baseUrl}}/staff/4",
                                     "path": [
-                                        "users",
-                                        "1"
+                                        "staff",
+                                        "4"
                                     ],
                                     "host": [
                                         "{{baseUrl}}"
@@ -1185,9 +1907,9 @@
                         "body": {},
                         "header": [],
                         "url": {
-                            "raw": "{{baseUrl}}/categories",
+                            "raw": "{{baseUrl}}/staff",
                             "path": [
-                                "categories"
+                                "staff"
                             ],
                             "host": [
                                 "{{baseUrl}}"
@@ -1203,9 +1925,9 @@
                                 "method": "GET",
                                 "header": [],
                                 "url": {
-                                    "raw": "{{baseUrl}}/categories",
+                                    "raw": "{{baseUrl}}/staff",
                                     "path": [
-                                        "categories"
+                                        "staff"
                                     ],
                                     "host": [
                                         "{{baseUrl}}"
@@ -1214,6 +1936,230 @@
                                     "variable": []
                                 },
                                 "body": {}
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Store ",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"staff2\",\n  \"email\": \"staff2@store.com\",\n  \"contact\": \"+1-555-9999\",\n  \"joiningDate\": \"2025-03-15\",\n  \"role\": \"Manager\",\n  \"status\": \"Active\",\n  \"published\": true,\n  \"avatar\": \"https://example.com/avatar.png\",\n  \"salary\": 4500,\n  \"bankAccount\": \"ACC-12345\",\n  \"paymentMethod\": \"Bank Transfer\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/staff",
+                            "path": [
+                                "staff"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/staff",
+                                    "path": [
+                                        "staff"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"john\",\n  \"email\": \"john@example.com\",\n  \"password\": \"123456\",\n  \"role_id\": 1,\n  \"address\": \"New York\"\n}\n",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Update",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "PUT",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"staff update\"\n  }",
+                            "options": {
+                                "raw": {
+                                    "language": "text"
+                                }
+                            }
+                        },
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/staff/4",
+                            "path": [
+                                "staff",
+                                "4"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "PUT",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/staff/4",
+                                    "path": [
+                                        "staff",
+                                        "4"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"john2\",\n  \"email\": \"john2@example.com\"\n\n}\n",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                }
+            ],
+            "event": [
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "exec": [],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                },
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                }
+            ],
+            "auth": {}
+        },
+        {
+            "name": "Category",
+            "description": "",
+            "item": [
+                {
+                    "name": "Update",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "PUT",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"category_name\": \"Electronics udpate\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "text"
+                                }
+                            }
+                        },
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/categories/1",
+                            "path": [
+                                "categories",
+                                "1"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "PUT",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/categories/1",
+                                    "path": [
+                                        "categories",
+                                        "1"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"john2\",\n  \"email\": \"john2@example.com\"\n\n}\n",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
                             },
                             "cookie": []
                         }
@@ -1289,27 +2235,68 @@
                     }
                 },
                 {
-                    "name": "Update",
+                    "name": "List",
                     "description": "",
                     "event": [],
                     "auth": {},
                     "request": {
                         "auth": {},
-                        "method": "PUT",
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\n  \"category_name\": \"Electronics udpate\"\n}",
-                            "options": {
-                                "raw": {
-                                    "language": "text"
-                                }
-                            }
-                        },
+                        "method": "GET",
+                        "body": {},
                         "header": [],
                         "url": {
-                            "raw": "{{baseUrl}}/categories/1",
+                            "raw": "{{baseUrl}}/categories",
                             "path": [
-                                "categories",
+                                "categories"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/categories",
+                                    "path": [
+                                        "categories"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Get By ID",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "GET",
+                        "body": {},
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/users/1",
+                            "path": [
+                                "users",
                                 "1"
                             ],
                             "host": [
@@ -1323,12 +2310,12 @@
                         {
                             "name": "Success",
                             "originalRequest": {
-                                "method": "PUT",
+                                "method": "GET",
                                 "header": [],
                                 "url": {
-                                    "raw": "{{baseUrl}}/categories/1",
+                                    "raw": "{{baseUrl}}/users/1",
                                     "path": [
-                                        "categories",
+                                        "users",
                                         "1"
                                     ],
                                     "host": [
@@ -1337,15 +2324,58 @@
                                     "query": [],
                                     "variable": []
                                 },
-                                "body": {
-                                    "mode": "raw",
-                                    "raw": "{\n  \"username\": \"john2\",\n  \"email\": \"john2@example.com\"\n\n}\n",
-                                    "options": {
-                                        "raw": {
-                                            "language": "json"
-                                        }
-                                    }
-                                }
+                                "body": {}
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Delete By ID",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "DELETE",
+                        "body": {},
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/categories/3",
+                            "path": [
+                                "categories",
+                                "3"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "DELETE",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/categories/3",
+                                    "path": [
+                                        "categories",
+                                        "3"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
                             },
                             "cookie": []
                         }
@@ -1380,55 +2410,6 @@
             "name": "Location ",
             "description": "",
             "item": [
-                {
-                    "name": "List",
-                    "description": "",
-                    "event": [],
-                    "auth": {},
-                    "request": {
-                        "auth": {},
-                        "method": "GET",
-                        "body": {},
-                        "header": [],
-                        "url": {
-                            "raw": "{{baseUrl}}/locations",
-                            "path": [
-                                "locations"
-                            ],
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "query": [],
-                            "variable": []
-                        }
-                    },
-                    "response": [
-                        {
-                            "name": "Success",
-                            "originalRequest": {
-                                "method": "GET",
-                                "header": [],
-                                "url": {
-                                    "raw": "{{baseUrl}}/locations",
-                                    "path": [
-                                        "locations"
-                                    ],
-                                    "host": [
-                                        "{{baseUrl}}"
-                                    ],
-                                    "query": [],
-                                    "variable": []
-                                },
-                                "body": {}
-                            },
-                            "cookie": []
-                        }
-                    ],
-                    "protocolProfileBehavior": {
-                        "strictSSL": false,
-                        "followRedirects": true
-                    }
-                },
                 {
                     "name": "Delete By ID",
                     "description": "",
@@ -1532,6 +2513,55 @@
                     }
                 },
                 {
+                    "name": "List",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "GET",
+                        "body": {},
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/locations",
+                            "path": [
+                                "locations"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/locations",
+                                    "path": [
+                                        "locations"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
                     "name": "Store ",
                     "description": "",
                     "event": [],
@@ -1541,7 +2571,7 @@
                         "method": "POST",
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"name\": \"Main Office\",\n  \"address\": \"123 Main Street, Dhaka\",\n  \"contact_person\": \"John Doe\",\n  \"is_default\": true\n}\n",
+                            "raw": "{\n  \"name\": \"wirehouse 2\",\n  \"address\": \"123 Main Street, Netrokona\",\n  \"contact_person\": \"New Contact person\",\n  \"is_default\": false\n}\n",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -1685,37 +2715,53 @@
             "auth": {}
         },
         {
-            "name": "Attributes",
+            "name": "Inventory",
             "description": "",
             "item": [
                 {
-                    "name": "Update",
+                    "name": "List",
                     "description": "",
                     "event": [],
                     "auth": {},
                     "request": {
                         "auth": {},
-                        "method": "PUT",
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\n  \"name\": \"update\"\n\n}",
-                            "options": {
-                                "raw": {
-                                    "language": "text"
-                                }
-                            }
-                        },
+                        "method": "GET",
+                        "body": {},
                         "header": [],
                         "url": {
-                            "raw": "{{baseUrl}}/attributes/3",
+                            "raw": "{{baseUrl}}/inventory/",
                             "path": [
-                                "attributes",
-                                "3"
+                                "inventory"
                             ],
                             "host": [
                                 "{{baseUrl}}"
                             ],
-                            "query": [],
+                            "query": [
+                                {
+                                    "key": "search",
+                                    "value": "productName",
+                                    "description": "",
+                                    "type": "string"
+                                },
+                                {
+                                    "key": "location_id",
+                                    "value": "1",
+                                    "description": "",
+                                    "type": "string"
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "",
+                                    "type": "string"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10",
+                                    "description": "",
+                                    "type": "string"
+                                }
+                            ],
                             "variable": []
                         }
                     },
@@ -1723,13 +2769,12 @@
                         {
                             "name": "Success",
                             "originalRequest": {
-                                "method": "PUT",
+                                "method": "GET",
                                 "header": [],
                                 "url": {
-                                    "raw": "{{baseUrl}}/attributes/3",
+                                    "raw": "{{baseUrl}}/inventory/",
                                     "path": [
-                                        "attributes",
-                                        "3"
+                                        "inventory"
                                     ],
                                     "host": [
                                         "{{baseUrl}}"
@@ -1737,15 +2782,7 @@
                                     "query": [],
                                     "variable": []
                                 },
-                                "body": {
-                                    "mode": "raw",
-                                    "raw": "{\n  \"username\": \"john2\",\n  \"email\": \"john2@example.com\"\n\n}\n",
-                                    "options": {
-                                        "raw": {
-                                            "language": "json"
-                                        }
-                                    }
-                                }
+                                "body": {}
                             },
                             "cookie": []
                         }
@@ -1754,22 +2791,54 @@
                         "strictSSL": false,
                         "followRedirects": true
                     }
+                }
+            ],
+            "event": [
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "exec": [],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
                 },
                 {
-                    "name": "Delete By ID",
+                    "listen": "test",
+                    "script": {
+                        "exec": [],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                }
+            ],
+            "auth": {}
+        },
+        {
+            "name": "Transfers",
+            "description": "",
+            "item": [
+                {
+                    "name": "Varient Transfer",
                     "description": "",
                     "event": [],
                     "auth": {},
                     "request": {
                         "auth": {},
-                        "method": "DELETE",
-                        "body": {},
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"productId\": 17,\n  \"variantId\": 49,\n  \"fromLocationId\": 1,\n  \"toLocationId\": 2,\n  \"quantity\": 5,\n  \"notes\": \"Moving to wirehouse 2\"\n}\n",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
                         "header": [],
                         "url": {
-                            "raw": "{{baseUrl}}/attributes/3",
+                            "raw": "{{baseUrl}}/transfers",
                             "path": [
-                                "attributes",
-                                "3"
+                                "transfers"
                             ],
                             "host": [
                                 "{{baseUrl}}"
@@ -1782,13 +2851,12 @@
                         {
                             "name": "Success",
                             "originalRequest": {
-                                "method": "DELETE",
+                                "method": "POST",
                                 "header": [],
                                 "url": {
-                                    "raw": "{{baseUrl}}/attributes/3",
+                                    "raw": "{{baseUrl}}/transfers",
                                     "path": [
-                                        "attributes",
-                                        "3"
+                                        "transfers"
                                     ],
                                     "host": [
                                         "{{baseUrl}}"
@@ -1806,6 +2874,181 @@
                         "followRedirects": true
                     }
                 },
+                {
+                    "name": "Varient Transfer cancle",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "PUT",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"productId\": 17,\n  \"variantId\": 49,\n  \"fromLocationId\": 1,\n  \"toLocationId\": 2,\n  \"quantity\": 5,\n  \"notes\": \"Moving to wirehouse 2\"\n}\n",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/transfers/3/cancel",
+                            "path": [
+                                "transfers",
+                                "3",
+                                "cancel"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "PUT",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/transfers/3/cancel",
+                                    "path": [
+                                        "transfers",
+                                        "3",
+                                        "cancel"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "List",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "GET",
+                        "body": {},
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/transfers/",
+                            "path": [
+                                "transfers"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": [
+                                        "Completed",
+                                        "Cancelled"
+                                    ],
+                                    "description": "",
+                                    "type": "string"
+                                },
+                                {
+                                    "key": "product_id",
+                                    "value": "17",
+                                    "description": "",
+                                    "type": "string"
+                                },
+                                {
+                                    "key": "from_location_id",
+                                    "value": "1",
+                                    "description": "",
+                                    "type": "string"
+                                },
+                                {
+                                    "key": "to_location_id",
+                                    "value": "2",
+                                    "description": "",
+                                    "type": "string"
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "",
+                                    "type": "string"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10",
+                                    "description": "",
+                                    "type": "string"
+                                }
+                            ],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/transfers/",
+                                    "path": [
+                                        "transfers"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                }
+            ],
+            "event": [
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "exec": [],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                },
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                }
+            ],
+            "auth": {}
+        },
+        {
+            "name": "Attributes",
+            "description": "",
+            "item": [
                 {
                     "name": "Get By ID",
                     "description": "",
@@ -1964,6 +3207,124 @@
                                         }
                                     }
                                 }
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Update",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "PUT",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"update\"\n\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "text"
+                                }
+                            }
+                        },
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/attributes/3",
+                            "path": [
+                                "attributes",
+                                "3"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "PUT",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/attributes/3",
+                                    "path": [
+                                        "attributes",
+                                        "3"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"username\": \"john2\",\n  \"email\": \"john2@example.com\"\n\n}\n",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Delete By ID",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "DELETE",
+                        "body": {},
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/attributes/3",
+                            "path": [
+                                "attributes",
+                                "3"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "DELETE",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{baseUrl}}/attributes/3",
+                                    "path": [
+                                        "attributes",
+                                        "3"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
                             },
                             "cookie": []
                         }
@@ -2220,10 +3581,10 @@
                         "body": {},
                         "header": [],
                         "url": {
-                            "raw": "{{baseUrl}}/products/16",
+                            "raw": "{{baseUrl}}/products/23",
                             "path": [
                                 "products",
-                                "16"
+                                "23"
                             ],
                             "host": [
                                 "{{baseUrl}}"
@@ -2239,10 +3600,10 @@
                                 "method": "GET",
                                 "header": [],
                                 "url": {
-                                    "raw": "{{baseUrl}}/products/16",
+                                    "raw": "{{baseUrl}}/products/23",
                                     "path": [
                                         "products",
-                                        "16"
+                                        "23"
                                     ],
                                     "host": [
                                         "{{baseUrl}}"

@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS role_permissions (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    role_id BIGINT UNSIGNED NOT NULL,
+    permission_id BIGINT UNSIGNED NOT NULL,
+    `read` TINYINT(1) NOT NULL DEFAULT 0,
+    `write` TINYINT(1) NOT NULL DEFAULT 0,
+    `delete` TINYINT(1) NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_role_permission (role_id, permission_id),
+    FOREIGN KEY (role_id) REFERENCES staff_roles (id) ON DELETE CASCADE,
+    FOREIGN KEY (permission_id) REFERENCES permissions (id) ON DELETE CASCADE
+);

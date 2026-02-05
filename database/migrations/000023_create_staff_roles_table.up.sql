@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS staff_roles (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    permissions JSON NOT NULL DEFAULT ('[]'),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
+);
+
+CREATE INDEX idx_staff_roles_deleted_at ON staff_roles (deleted_at);

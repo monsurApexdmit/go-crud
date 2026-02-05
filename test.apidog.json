@@ -1878,31 +1878,43 @@
                 "method": "get",
                 "path": "/users",
                 "parameters": {
-                  "path": [],
                   "query": [],
+                  "path": [],
                   "cookie": [],
                   "header": []
                 },
                 "auth": {},
                 "securityScheme": {},
-                "commonParameters": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
                 "responses": [
                   {
                     "id": "103285586",
                     "code": 200,
+                    "name": "",
+                    "headers": [],
                     "jsonSchema": {
                       "type": "object",
                       "properties": {},
                       "x-apidog-orders": []
                     },
                     "itemSchema": {},
-                    "contentType": "json"
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
                   }
                 ],
                 "responseExamples": [],
                 "requestBody": {
                   "type": "none",
                   "parameters": [],
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [],
                   "oasExtensions": ""
                 },
                 "description": "",
@@ -2260,8 +2272,8 @@
           ]
         },
         {
-          "name": "Category",
-          "id": 6336079,
+          "name": "Customers",
+          "id": 6440495,
           "auth": {},
           "securityScheme": {},
           "parentId": 0,
@@ -2297,9 +2309,9 @@
             {
               "name": "Delete By ID",
               "api": {
-                "id": "27236588",
+                "id": "27639423",
                 "method": "delete",
-                "path": "/categories/3",
+                "path": "/customers/6",
                 "parameters": {
                   "query": [],
                   "path": [],
@@ -2349,7 +2361,7 @@
                 "ordering": 0,
                 "cases": [
                   {
-                    "id": 37118719,
+                    "id": 37680212,
                     "type": "DEBUG_CASE",
                     "path": null,
                     "name": "Success",
@@ -2416,35 +2428,47 @@
             {
               "name": "Get By ID",
               "api": {
-                "id": "27236589",
+                "id": "27639424",
                 "method": "get",
-                "path": "/users/1",
+                "path": "/customers/5",
                 "parameters": {
-                  "path": [],
                   "query": [],
+                  "path": [],
                   "cookie": [],
                   "header": []
                 },
                 "auth": {},
                 "securityScheme": {},
-                "commonParameters": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
                 "responses": [
                   {
                     "id": "185245873",
                     "code": 200,
+                    "name": "",
+                    "headers": [],
                     "jsonSchema": {
                       "type": "object",
                       "properties": {},
                       "x-apidog-orders": []
                     },
                     "itemSchema": {},
-                    "contentType": "json"
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
                   }
                 ],
                 "responseExamples": [],
                 "requestBody": {
                   "type": "none",
                   "parameters": [],
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [],
                   "oasExtensions": ""
                 },
                 "description": "",
@@ -2456,7 +2480,7 @@
                 "ordering": 0,
                 "cases": [
                   {
-                    "id": 37118720,
+                    "id": 37680213,
                     "type": "DEBUG_CASE",
                     "path": null,
                     "name": "Success",
@@ -2523,9 +2547,9 @@
             {
               "name": "List",
               "api": {
-                "id": "27236590",
+                "id": "27639425",
                 "method": "get",
-                "path": "/categories",
+                "path": "/customers",
                 "parameters": {
                   "query": [],
                   "path": [],
@@ -2575,7 +2599,7 @@
                 "ordering": 0,
                 "cases": [
                   {
-                    "id": 37118721,
+                    "id": 37680214,
                     "type": "DEBUG_CASE",
                     "path": null,
                     "name": "Success",
@@ -2590,6 +2614,2069 @@
                     "requestBody": {
                       "parameters": [],
                       "type": "none"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            },
+            {
+              "name": "Store ",
+              "api": {
+                "id": "27639426",
+                "method": "post",
+                "path": "/customers",
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "134197157",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "application/json",
+                  "parameters": [],
+                  "jsonSchema": {
+                    "type": "object",
+                    "properties": {
+                      "username": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "password": {
+                        "type": "string"
+                      },
+                      "role_id": {
+                        "type": "integer"
+                      },
+                      "address": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "username",
+                      "email",
+                      "password",
+                      "role_id",
+                      "address"
+                    ],
+                    "x-apidog-orders": [
+                      "username",
+                      "email",
+                      "password",
+                      "role_id",
+                      "address"
+                    ]
+                  },
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [
+                    {
+                      "value": "{\n  \"name\": \"customer3\",\n  \"email\": \"customer3@example.com\",\n  \"phone\": \"555-1234\",\n  \"address\": \"123 Main St\",\n  \"city\": \"New York\",\n  \"state\": \"NY\",\n  \"zipCode\": \"10001\",\n  \"country\": \"USA\",\n  \"customerType\": \"retail\",\n  \"status\": \"active\",\n  \"notes\": \"VIP customer\",\n  \"storeCredit\": 100.00\n}",
+                      "mediaType": "application/json",
+                      "description": ""
+                    }
+                  ],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 0,
+                "cases": [
+                  {
+                    "id": 37680215,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "134197157",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "data": "{\n  \"username\": \"john\",\n  \"email\": \"john@example.com\",\n  \"password\": \"123456\",\n  \"role_id\": 1,\n  \"address\": \"New York\"\n}\n",
+                      "type": "application/json",
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            },
+            {
+              "name": "Update",
+              "api": {
+                "id": "27639427",
+                "method": "put",
+                "path": "/customers/5",
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "195850892",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "text/plain",
+                  "parameters": [],
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [
+                    {
+                      "value": "{\n \"customerType\": \"wholesale\"\n}\n",
+                      "mediaType": "text/plain",
+                      "description": ""
+                    }
+                  ],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 0,
+                "cases": [
+                  {
+                    "id": 37680216,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "195850892",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "data": "{\n  \"username\": \"john2\",\n  \"email\": \"john2@example.com\"\n\n}\n",
+                      "type": "text/plain",
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Vendors",
+          "id": 6440590,
+          "auth": {},
+          "securityScheme": {},
+          "parentId": 0,
+          "serverId": "",
+          "description": "",
+          "identityPattern": {
+            "httpApi": {
+              "type": "inherit",
+              "bodyType": "",
+              "fields": []
+            }
+          },
+          "shareSettings": {},
+          "visibility": "INHERITED",
+          "moduleId": 1055194,
+          "preProcessors": [
+            {
+              "id": "inheritProcessors",
+              "type": "inheritProcessors",
+              "data": {}
+            }
+          ],
+          "postProcessors": [
+            {
+              "id": "inheritProcessors",
+              "type": "inheritProcessors",
+              "data": {}
+            }
+          ],
+          "inheritPostProcessors": {},
+          "inheritPreProcessors": {},
+          "items": [
+            {
+              "name": "Delete By ID",
+              "api": {
+                "id": "27640709",
+                "method": "delete",
+                "path": "/vendors/4",
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "181255710",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 0,
+                "cases": [
+                  {
+                    "id": 37682273,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "181255710",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            },
+            {
+              "name": "Get By ID",
+              "api": {
+                "id": "27640710",
+                "method": "get",
+                "path": "/vendors/3",
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "185245873",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 0,
+                "cases": [
+                  {
+                    "id": 37682274,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "185245873",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            },
+            {
+              "name": "List",
+              "api": {
+                "id": "27640711",
+                "method": "get",
+                "path": "/vendors",
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "103285586",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 0,
+                "cases": [
+                  {
+                    "id": 37682275,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "103285586",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            },
+            {
+              "name": "Store ",
+              "api": {
+                "id": "27640712",
+                "method": "post",
+                "path": "/vendors",
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "134197157",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "application/json",
+                  "parameters": [],
+                  "jsonSchema": {
+                    "type": "object",
+                    "properties": {
+                      "username": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "password": {
+                        "type": "string"
+                      },
+                      "role_id": {
+                        "type": "integer"
+                      },
+                      "address": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "username",
+                      "email",
+                      "password",
+                      "role_id",
+                      "address"
+                    ],
+                    "x-apidog-orders": [
+                      "username",
+                      "email",
+                      "password",
+                      "role_id",
+                      "address"
+                    ]
+                  },
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [
+                    {
+                      "value": "{\n  \"name\": \"Acme Corp\",\n  \"email\": \"vendor2@example.com\",\n  \"phone\": \"555-5678\",\n  \"address\": \"456 Business Ave\",\n  \"logo\": \"https://example.com/logo.png\",\n  \"status\": \"Active\",\n  \"description\": \"A reliable supplier\",\n  \"totalPaid\": 0,\n  \"amountPayable\": 0\n}\n",
+                      "mediaType": "application/json",
+                      "description": ""
+                    }
+                  ],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 0,
+                "cases": [
+                  {
+                    "id": 37682276,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "134197157",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "data": "{\n  \"username\": \"john\",\n  \"email\": \"john@example.com\",\n  \"password\": \"123456\",\n  \"role_id\": 1,\n  \"address\": \"New York\"\n}\n",
+                      "type": "application/json",
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            },
+            {
+              "name": "Update",
+              "api": {
+                "id": "27640713",
+                "method": "put",
+                "path": "/vendors/4",
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "195850892",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "text/plain",
+                  "parameters": [],
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [
+                    {
+                      "value": "{\n  \"name\": \"Acme Corp 2\"\n}",
+                      "mediaType": "text/plain",
+                      "description": ""
+                    }
+                  ],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 0,
+                "cases": [
+                  {
+                    "id": 37682277,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "195850892",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "data": "{\n  \"username\": \"john2\",\n  \"email\": \"john2@example.com\"\n\n}\n",
+                      "type": "text/plain",
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Staff",
+          "id": 6440605,
+          "auth": {},
+          "securityScheme": {},
+          "parentId": 0,
+          "serverId": "",
+          "description": "",
+          "identityPattern": {
+            "httpApi": {
+              "type": "inherit",
+              "bodyType": "",
+              "fields": []
+            }
+          },
+          "shareSettings": {},
+          "visibility": "INHERITED",
+          "moduleId": 1055194,
+          "preProcessors": [
+            {
+              "id": "inheritProcessors",
+              "type": "inheritProcessors",
+              "data": {}
+            }
+          ],
+          "postProcessors": [
+            {
+              "id": "inheritProcessors",
+              "type": "inheritProcessors",
+              "data": {}
+            }
+          ],
+          "inheritPostProcessors": {},
+          "inheritPreProcessors": {},
+          "items": [
+            {
+              "name": "Staff Roles",
+              "api": {
+                "id": "27658639",
+                "method": "get",
+                "path": "/staff-roles",
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "103285586",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 18,
+                "cases": [
+                  {
+                    "id": 37704829,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "103285586",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            },
+            {
+              "name": "Staff Roles  POST",
+              "api": {
+                "id": "27658644",
+                "method": "post",
+                "path": "/staff-roles",
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "103285586",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "application/json",
+                  "parameters": [],
+                  "jsonSchema": {
+                    "type": "object",
+                    "properties": {}
+                  },
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [
+                    {
+                      "mediaType": "application/json",
+                      "value": "{\n  \"name\": \"string\",\n  \"permissions\": [\n    { \"name\": \"Dashboard\", \"read\": true, \"write\": false, \"delete\": false },\n    { \"name\": \"Products\", \"read\": true, \"write\": true, \"delete\": false },\n    { \"name\": \"Categories\", \"read\": true, \"write\": true, \"delete\": true },\n    { \"name\": \"Attributes\", \"read\": false, \"write\": false, \"delete\": false },\n    { \"name\": \"Coupons\", \"read\": false, \"write\": false, \"delete\": false },\n    { \"name\": \"Customers\", \"read\": false, \"write\": false, \"delete\": false },\n    { \"name\": \"Orders\", \"read\": false, \"write\": false, \"delete\": false },\n    { \"name\": \"POS\", \"read\": false, \"write\": false, \"delete\": false },\n    { \"name\": \"Sells\", \"read\": false, \"write\": false, \"delete\": false },\n    { \"name\": \"Staff\", \"read\": false, \"write\": false, \"delete\": false },\n    { \"name\": \"Settings\", \"read\": false, \"write\": false, \"delete\": false },\n    { \"name\": \"International\", \"read\": false, \"write\": false, \"delete\": false },\n    { \"name\": \"Store\", \"read\": false, \"write\": false, \"delete\": false },\n    { \"name\": \"Pages\", \"read\": false, \"write\": false, \"delete\": false }\n  ]\n}\n"
+                    }
+                  ],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 21,
+                "cases": [
+                  {
+                    "id": 37704830,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "103285586",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            },
+            {
+              "name": "Delete By ID",
+              "api": {
+                "id": "27644906",
+                "method": "delete",
+                "path": "/staff/3",
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "181255710",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 0,
+                "cases": [
+                  {
+                    "id": 37686433,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "181255710",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            },
+            {
+              "name": "Get By ID",
+              "api": {
+                "id": "27644907",
+                "method": "get",
+                "path": "/staff/4",
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "185245873",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 6,
+                "cases": [
+                  {
+                    "id": 37686434,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "185245873",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            },
+            {
+              "name": "List",
+              "api": {
+                "id": "27644908",
+                "method": "get",
+                "path": "/staff",
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "103285586",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 12,
+                "cases": [
+                  {
+                    "id": 37686435,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "103285586",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            },
+            {
+              "name": "Store ",
+              "api": {
+                "id": "27644909",
+                "method": "post",
+                "path": "/staff",
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "134197157",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "application/json",
+                  "parameters": [],
+                  "jsonSchema": {
+                    "type": "object",
+                    "properties": {
+                      "username": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "password": {
+                        "type": "string"
+                      },
+                      "role_id": {
+                        "type": "integer"
+                      },
+                      "address": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "username",
+                      "email",
+                      "password",
+                      "role_id",
+                      "address"
+                    ],
+                    "x-apidog-orders": [
+                      "username",
+                      "email",
+                      "password",
+                      "role_id",
+                      "address"
+                    ]
+                  },
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [
+                    {
+                      "value": "{\n  \"name\": \"staff2\",\n  \"email\": \"staff2@store.com\",\n  \"contact\": \"+1-555-9999\",\n  \"joiningDate\": \"2025-03-15\",\n  \"role\": \"Manager\",\n  \"status\": \"Active\",\n  \"published\": true,\n  \"avatar\": \"https://example.com/avatar.png\",\n  \"salary\": 4500,\n  \"bankAccount\": \"ACC-12345\",\n  \"paymentMethod\": \"Bank Transfer\"\n}",
+                      "mediaType": "application/json",
+                      "description": ""
+                    }
+                  ],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 24,
+                "cases": [
+                  {
+                    "id": 37686436,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "134197157",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "data": "{\n  \"username\": \"john\",\n  \"email\": \"john@example.com\",\n  \"password\": \"123456\",\n  \"role_id\": 1,\n  \"address\": \"New York\"\n}\n",
+                      "type": "application/json",
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            },
+            {
+              "name": "Update",
+              "api": {
+                "id": "27644910",
+                "method": "put",
+                "path": "/staff/4",
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "195850892",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "text/plain",
+                  "parameters": [],
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [
+                    {
+                      "value": "{\n  \"name\": \"staff update\"\n  }",
+                      "mediaType": "text/plain",
+                      "description": ""
+                    }
+                  ],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 30,
+                "cases": [
+                  {
+                    "id": 37686437,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "195850892",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "data": "{\n  \"username\": \"john2\",\n  \"email\": \"john2@example.com\"\n\n}\n",
+                      "type": "text/plain",
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Category",
+          "id": 6336079,
+          "auth": {},
+          "securityScheme": {},
+          "parentId": 0,
+          "serverId": "",
+          "description": "",
+          "identityPattern": {
+            "httpApi": {
+              "type": "inherit",
+              "bodyType": "",
+              "fields": []
+            }
+          },
+          "shareSettings": {},
+          "visibility": "INHERITED",
+          "moduleId": 1055194,
+          "preProcessors": [
+            {
+              "id": "inheritProcessors",
+              "type": "inheritProcessors",
+              "data": {}
+            }
+          ],
+          "postProcessors": [
+            {
+              "id": "inheritProcessors",
+              "type": "inheritProcessors",
+              "data": {}
+            }
+          ],
+          "inheritPostProcessors": {},
+          "inheritPreProcessors": {},
+          "items": [
+            {
+              "name": "Update",
+              "api": {
+                "id": "27236592",
+                "method": "put",
+                "path": "/categories/1",
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "195850892",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "text/plain",
+                  "parameters": [],
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [
+                    {
+                      "value": "{\n  \"category_name\": \"Electronics udpate\"\n}",
+                      "mediaType": "text/plain",
+                      "description": ""
+                    }
+                  ],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 0,
+                "cases": [
+                  {
+                    "id": 37118723,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "195850892",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "data": "{\n  \"username\": \"john2\",\n  \"email\": \"john2@example.com\"\n\n}\n",
+                      "type": "text/plain",
+                      "generateMode": "normal"
                     },
                     "auth": {},
                     "securityScheme": {},
@@ -2801,11 +4888,11 @@
               }
             },
             {
-              "name": "Update",
+              "name": "List",
               "api": {
-                "id": "27236592",
-                "method": "put",
-                "path": "/categories/1",
+                "id": "27236590",
+                "method": "get",
+                "path": "/categories",
                 "parameters": {
                   "query": [],
                   "path": [],
@@ -2822,7 +4909,7 @@
                 },
                 "responses": [
                   {
-                    "id": "195850892",
+                    "id": "103285586",
                     "code": 200,
                     "name": "",
                     "headers": [],
@@ -2839,17 +4926,11 @@
                 ],
                 "responseExamples": [],
                 "requestBody": {
-                  "type": "text/plain",
+                  "type": "none",
                   "parameters": [],
                   "required": false,
                   "mediaType": "",
-                  "examples": [
-                    {
-                      "value": "{\n  \"category_name\": \"Electronics udpate\"\n}",
-                      "mediaType": "text/plain",
-                      "description": ""
-                    }
-                  ],
+                  "examples": [],
                   "oasExtensions": ""
                 },
                 "description": "",
@@ -2861,11 +4942,11 @@
                 "ordering": 0,
                 "cases": [
                   {
-                    "id": 37118723,
+                    "id": 37118721,
                     "type": "DEBUG_CASE",
                     "path": null,
                     "name": "Success",
-                    "responseId": "195850892",
+                    "responseId": "103285586",
                     "parameters": {
                       "path": [],
                       "query": [],
@@ -2875,9 +4956,233 @@
                     "commonParameters": {},
                     "requestBody": {
                       "parameters": [],
-                      "data": "{\n  \"username\": \"john2\",\n  \"email\": \"john2@example.com\"\n\n}\n",
-                      "type": "text/plain",
-                      "generateMode": "normal"
+                      "type": "none"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            },
+            {
+              "name": "Get By ID",
+              "api": {
+                "id": "27236589",
+                "method": "get",
+                "path": "/users/1",
+                "parameters": {
+                  "path": [],
+                  "query": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {},
+                "responses": [
+                  {
+                    "id": "185245873",
+                    "code": 200,
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "contentType": "json"
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 0,
+                "cases": [
+                  {
+                    "id": 37118720,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "185245873",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            },
+            {
+              "name": "Delete By ID",
+              "api": {
+                "id": "27236588",
+                "method": "delete",
+                "path": "/categories/3",
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "181255710",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 0,
+                "cases": [
+                  {
+                    "id": 37118719,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "181255710",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none"
                     },
                     "auth": {},
                     "securityScheme": {},
@@ -2964,125 +5269,6 @@
           "inheritPostProcessors": {},
           "inheritPreProcessors": {},
           "items": [
-            {
-              "name": "List",
-              "api": {
-                "id": "27337143",
-                "method": "get",
-                "path": "/locations",
-                "parameters": {
-                  "query": [],
-                  "path": [],
-                  "cookie": [],
-                  "header": []
-                },
-                "auth": {},
-                "securityScheme": {},
-                "commonParameters": {
-                  "query": [],
-                  "body": [],
-                  "cookie": [],
-                  "header": []
-                },
-                "responses": [
-                  {
-                    "id": "103285586",
-                    "code": 200,
-                    "name": "",
-                    "headers": [],
-                    "jsonSchema": {
-                      "type": "object",
-                      "properties": {},
-                      "x-apidog-orders": []
-                    },
-                    "itemSchema": {},
-                    "description": "",
-                    "contentType": "json",
-                    "mediaType": ""
-                  }
-                ],
-                "responseExamples": [],
-                "requestBody": {
-                  "type": "none",
-                  "parameters": [],
-                  "required": false,
-                  "mediaType": "",
-                  "examples": [],
-                  "oasExtensions": ""
-                },
-                "description": "",
-                "tags": [],
-                "status": "released",
-                "serverId": "",
-                "operationId": "",
-                "sourceUrl": "",
-                "ordering": 0,
-                "cases": [
-                  {
-                    "id": 37267390,
-                    "type": "DEBUG_CASE",
-                    "path": null,
-                    "name": "Success",
-                    "responseId": "103285586",
-                    "parameters": {
-                      "path": [],
-                      "query": [],
-                      "cookie": [],
-                      "header": []
-                    },
-                    "commonParameters": {},
-                    "requestBody": {
-                      "parameters": [],
-                      "type": "none"
-                    },
-                    "auth": {},
-                    "securityScheme": {},
-                    "advancedSettings": {
-                      "disabledSystemHeaders": {}
-                    },
-                    "requestResult": null,
-                    "visibility": "INHERITED",
-                    "moduleId": 1055194,
-                    "categoryId": 0,
-                    "tagIds": [],
-                    "apiTestDataList": [],
-                    "preProcessors": [],
-                    "postProcessors": [],
-                    "inheritPostProcessors": {
-                      "enable": {},
-                      "defaultEnable": {}
-                    },
-                    "inheritPreProcessors": {
-                      "enable": {},
-                      "defaultEnable": {}
-                    }
-                  }
-                ],
-                "mocks": [],
-                "customApiFields": "{}",
-                "advancedSettings": {
-                  "disabledSystemHeaders": {}
-                },
-                "mockScript": {},
-                "codeSamples": [],
-                "commonResponseStatus": {},
-                "responseChildren": [],
-                "visibility": "INHERITED",
-                "moduleId": 1055194,
-                "oasExtensions": "",
-                "type": "http",
-                "preProcessors": [],
-                "postProcessors": [],
-                "inheritPostProcessors": {
-                  "enable": {},
-                  "defaultEnable": {}
-                },
-                "inheritPreProcessors": {
-                  "enable": {},
-                  "defaultEnable": {}
-                }
-              }
-            },
             {
               "name": "Delete By ID",
               "api": {
@@ -3322,6 +5508,125 @@
               }
             },
             {
+              "name": "List",
+              "api": {
+                "id": "27337143",
+                "method": "get",
+                "path": "/locations",
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "103285586",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 0,
+                "cases": [
+                  {
+                    "id": 37267390,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "103285586",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            },
+            {
               "name": "Store ",
               "api": {
                 "id": "27337144",
@@ -3400,7 +5705,7 @@
                   "mediaType": "",
                   "examples": [
                     {
-                      "value": "{\n  \"name\": \"Main Office\",\n  \"address\": \"123 Main Street, Dhaka\",\n  \"contact_person\": \"John Doe\",\n  \"is_default\": true\n}\n",
+                      "value": "{\n  \"name\": \"wirehouse 2\",\n  \"address\": \"123 Main Street, Netrokona\",\n  \"contact_person\": \"New Contact person\",\n  \"is_default\": false\n}\n",
                       "mediaType": "application/json",
                       "description": ""
                     }
@@ -3612,8 +5917,8 @@
           ]
         },
         {
-          "name": "Attributes",
-          "id": 6344709,
+          "name": "Inventory",
+          "id": 6443568,
           "auth": {},
           "securityScheme": {},
           "parentId": 0,
@@ -3647,13 +5952,50 @@
           "inheritPreProcessors": {},
           "items": [
             {
-              "name": "Update",
+              "name": "List",
               "api": {
-                "id": "27269921",
-                "method": "put",
-                "path": "/attributes/3",
+                "id": "27655438",
+                "method": "get",
+                "path": "/inventory/",
                 "parameters": {
-                  "query": [],
+                  "query": [
+                    {
+                      "id": "QcxirVC1er",
+                      "name": "search",
+                      "example": "productName",
+                      "required": false,
+                      "description": "",
+                      "enable": false,
+                      "type": "string"
+                    },
+                    {
+                      "id": "Ea1LNrIdzz",
+                      "name": "location_id",
+                      "example": "1",
+                      "required": false,
+                      "description": "",
+                      "enable": false,
+                      "type": "string"
+                    },
+                    {
+                      "id": "3VuVNImLb3",
+                      "name": "page",
+                      "example": "1",
+                      "required": false,
+                      "description": "",
+                      "enable": false,
+                      "type": "string"
+                    },
+                    {
+                      "id": "Sy4g2Jq792",
+                      "name": "limit",
+                      "example": "10",
+                      "required": false,
+                      "description": "",
+                      "enable": false,
+                      "type": "string"
+                    }
+                  ],
                   "path": [],
                   "cookie": [],
                   "header": []
@@ -3668,7 +6010,7 @@
                 },
                 "responses": [
                   {
-                    "id": "195850892",
+                    "id": "103285586",
                     "code": 200,
                     "name": "",
                     "headers": [],
@@ -3685,17 +6027,11 @@
                 ],
                 "responseExamples": [],
                 "requestBody": {
-                  "type": "text/plain",
+                  "type": "none",
                   "parameters": [],
                   "required": false,
                   "mediaType": "",
-                  "examples": [
-                    {
-                      "value": "{\n  \"name\": \"update\"\n\n}",
-                      "mediaType": "text/plain",
-                      "description": ""
-                    }
-                  ],
+                  "examples": [],
                   "oasExtensions": ""
                 },
                 "description": "",
@@ -3707,11 +6043,11 @@
                 "ordering": 0,
                 "cases": [
                   {
-                    "id": 37168066,
+                    "id": 37697924,
                     "type": "DEBUG_CASE",
                     "path": null,
                     "name": "Success",
-                    "responseId": "195850892",
+                    "responseId": "103285586",
                     "parameters": {
                       "path": [],
                       "query": [],
@@ -3721,9 +6057,7 @@
                     "commonParameters": {},
                     "requestBody": {
                       "parameters": [],
-                      "data": "{\n  \"username\": \"john2\",\n  \"email\": \"john2@example.com\"\n\n}\n",
-                      "type": "text/plain",
-                      "generateMode": "normal"
+                      "type": "none"
                     },
                     "auth": {},
                     "securityScheme": {},
@@ -3772,13 +6106,50 @@
                   "defaultEnable": {}
                 }
               }
-            },
+            }
+          ]
+        },
+        {
+          "name": "Transfers",
+          "id": 6443644,
+          "auth": {},
+          "securityScheme": {},
+          "parentId": 0,
+          "serverId": "",
+          "description": "",
+          "identityPattern": {
+            "httpApi": {
+              "type": "inherit",
+              "bodyType": "",
+              "fields": []
+            }
+          },
+          "shareSettings": {},
+          "visibility": "INHERITED",
+          "moduleId": 1055194,
+          "preProcessors": [
             {
-              "name": "Delete By ID",
+              "id": "inheritProcessors",
+              "type": "inheritProcessors",
+              "data": {}
+            }
+          ],
+          "postProcessors": [
+            {
+              "id": "inheritProcessors",
+              "type": "inheritProcessors",
+              "data": {}
+            }
+          ],
+          "inheritPostProcessors": {},
+          "inheritPreProcessors": {},
+          "items": [
+            {
+              "name": "Varient Transfer",
               "api": {
-                "id": "27269916",
-                "method": "delete",
-                "path": "/attributes/3",
+                "id": "27655666",
+                "method": "post",
+                "path": "/transfers",
                 "parameters": {
                   "query": [],
                   "path": [],
@@ -3795,7 +6166,7 @@
                 },
                 "responses": [
                   {
-                    "id": "181255710",
+                    "id": "103285586",
                     "code": 200,
                     "name": "",
                     "headers": [],
@@ -3812,11 +6183,20 @@
                 ],
                 "responseExamples": [],
                 "requestBody": {
-                  "type": "none",
+                  "type": "application/json",
                   "parameters": [],
+                  "jsonSchema": {
+                    "type": "object",
+                    "properties": {}
+                  },
                   "required": false,
                   "mediaType": "",
-                  "examples": [],
+                  "examples": [
+                    {
+                      "mediaType": "application/json",
+                      "value": "{\n  \"productId\": 17,\n  \"variantId\": 49,\n  \"fromLocationId\": 1,\n  \"toLocationId\": 2,\n  \"quantity\": 5,\n  \"notes\": \"Moving to wirehouse 2\"\n}\n"
+                    }
+                  ],
                   "oasExtensions": ""
                 },
                 "description": "",
@@ -3825,14 +6205,14 @@
                 "serverId": "",
                 "operationId": "",
                 "sourceUrl": "",
-                "ordering": 0,
+                "ordering": 6,
                 "cases": [
                   {
-                    "id": 37168062,
+                    "id": 37698352,
                     "type": "DEBUG_CASE",
                     "path": null,
                     "name": "Success",
-                    "responseId": "181255710",
+                    "responseId": "103285586",
                     "parameters": {
                       "path": [],
                       "query": [],
@@ -3892,6 +6272,348 @@
                 }
               }
             },
+            {
+              "name": "Varient Transfer cancle",
+              "api": {
+                "id": "27655678",
+                "method": "put",
+                "path": "/transfers/3/cancel",
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "103285586",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "application/json",
+                  "parameters": [],
+                  "jsonSchema": {
+                    "type": "object",
+                    "properties": {}
+                  },
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [
+                    {
+                      "mediaType": "application/json",
+                      "value": "{\n  \"productId\": 17,\n  \"variantId\": 49,\n  \"fromLocationId\": 1,\n  \"toLocationId\": 2,\n  \"quantity\": 5,\n  \"notes\": \"Moving to wirehouse 2\"\n}\n"
+                    }
+                  ],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 12,
+                "cases": [
+                  {
+                    "id": 37698370,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "103285586",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            },
+            {
+              "name": "List",
+              "api": {
+                "id": "27655627",
+                "method": "get",
+                "path": "/transfers/",
+                "parameters": {
+                  "query": [
+                    {
+                      "id": "Ls3twyOf2g",
+                      "name": "status",
+                      "example": [
+                        "Completed",
+                        "Cancelled"
+                      ],
+                      "required": false,
+                      "description": "",
+                      "enable": true,
+                      "type": "array"
+                    },
+                    {
+                      "id": "gJE5LELw32",
+                      "name": "product_id",
+                      "example": "17",
+                      "required": false,
+                      "description": "",
+                      "enable": false,
+                      "type": "string"
+                    },
+                    {
+                      "id": "25ApfmmgCm",
+                      "name": "from_location_id",
+                      "example": "1",
+                      "required": false,
+                      "description": "",
+                      "enable": false,
+                      "type": "string"
+                    },
+                    {
+                      "id": "6Fkr5hYU2d",
+                      "name": "to_location_id",
+                      "example": "2",
+                      "required": false,
+                      "description": "",
+                      "enable": false,
+                      "type": "string"
+                    },
+                    {
+                      "id": "pNEVi2le5t",
+                      "name": "page",
+                      "example": "1",
+                      "required": false,
+                      "description": "",
+                      "enable": false,
+                      "type": "string"
+                    },
+                    {
+                      "id": "ZkF8acSqf0",
+                      "name": "limit",
+                      "example": "10",
+                      "required": false,
+                      "description": "",
+                      "enable": false,
+                      "type": "string"
+                    }
+                  ],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "103285586",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 0,
+                "cases": [
+                  {
+                    "id": 37698246,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "103285586",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Attributes",
+          "id": 6344709,
+          "auth": {},
+          "securityScheme": {},
+          "parentId": 0,
+          "serverId": "",
+          "description": "",
+          "identityPattern": {
+            "httpApi": {
+              "type": "inherit",
+              "bodyType": "",
+              "fields": []
+            }
+          },
+          "shareSettings": {},
+          "visibility": "INHERITED",
+          "moduleId": 1055194,
+          "preProcessors": [
+            {
+              "id": "inheritProcessors",
+              "type": "inheritProcessors",
+              "data": {}
+            }
+          ],
+          "postProcessors": [
+            {
+              "id": "inheritProcessors",
+              "type": "inheritProcessors",
+              "data": {}
+            }
+          ],
+          "inheritPostProcessors": {},
+          "inheritPreProcessors": {},
+          "items": [
             {
               "name": "Get By ID",
               "api": {
@@ -4248,6 +6970,252 @@
                       "data": "{\n  \"username\": \"john\",\n  \"email\": \"john@example.com\",\n  \"password\": \"123456\",\n  \"role_id\": 1,\n  \"address\": \"New York\"\n}\n",
                       "type": "application/json",
                       "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            },
+            {
+              "name": "Update",
+              "api": {
+                "id": "27269921",
+                "method": "put",
+                "path": "/attributes/3",
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "195850892",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "text/plain",
+                  "parameters": [],
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [
+                    {
+                      "value": "{\n  \"name\": \"update\"\n\n}",
+                      "mediaType": "text/plain",
+                      "description": ""
+                    }
+                  ],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 0,
+                "cases": [
+                  {
+                    "id": 37168066,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "195850892",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "data": "{\n  \"username\": \"john2\",\n  \"email\": \"john2@example.com\"\n\n}\n",
+                      "type": "text/plain",
+                      "generateMode": "normal"
+                    },
+                    "auth": {},
+                    "securityScheme": {},
+                    "advancedSettings": {
+                      "disabledSystemHeaders": {}
+                    },
+                    "requestResult": null,
+                    "visibility": "INHERITED",
+                    "moduleId": 1055194,
+                    "categoryId": 0,
+                    "tagIds": [],
+                    "apiTestDataList": [],
+                    "preProcessors": [],
+                    "postProcessors": [],
+                    "inheritPostProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    },
+                    "inheritPreProcessors": {
+                      "enable": {},
+                      "defaultEnable": {}
+                    }
+                  }
+                ],
+                "mocks": [],
+                "customApiFields": "{}",
+                "advancedSettings": {
+                  "disabledSystemHeaders": {}
+                },
+                "mockScript": {},
+                "codeSamples": [],
+                "commonResponseStatus": {},
+                "responseChildren": [],
+                "visibility": "INHERITED",
+                "moduleId": 1055194,
+                "oasExtensions": "",
+                "type": "http",
+                "preProcessors": [],
+                "postProcessors": [],
+                "inheritPostProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                },
+                "inheritPreProcessors": {
+                  "enable": {},
+                  "defaultEnable": {}
+                }
+              }
+            },
+            {
+              "name": "Delete By ID",
+              "api": {
+                "id": "27269916",
+                "method": "delete",
+                "path": "/attributes/3",
+                "parameters": {
+                  "query": [],
+                  "path": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "auth": {},
+                "securityScheme": {},
+                "commonParameters": {
+                  "query": [],
+                  "body": [],
+                  "cookie": [],
+                  "header": []
+                },
+                "responses": [
+                  {
+                    "id": "181255710",
+                    "code": 200,
+                    "name": "",
+                    "headers": [],
+                    "jsonSchema": {
+                      "type": "object",
+                      "properties": {},
+                      "x-apidog-orders": []
+                    },
+                    "itemSchema": {},
+                    "description": "",
+                    "contentType": "json",
+                    "mediaType": ""
+                  }
+                ],
+                "responseExamples": [],
+                "requestBody": {
+                  "type": "none",
+                  "parameters": [],
+                  "required": false,
+                  "mediaType": "",
+                  "examples": [],
+                  "oasExtensions": ""
+                },
+                "description": "",
+                "tags": [],
+                "status": "released",
+                "serverId": "",
+                "operationId": "",
+                "sourceUrl": "",
+                "ordering": 0,
+                "cases": [
+                  {
+                    "id": 37168062,
+                    "type": "DEBUG_CASE",
+                    "path": null,
+                    "name": "Success",
+                    "responseId": "181255710",
+                    "parameters": {
+                      "path": [],
+                      "query": [],
+                      "cookie": [],
+                      "header": []
+                    },
+                    "commonParameters": {},
+                    "requestBody": {
+                      "parameters": [],
+                      "type": "none"
                     },
                     "auth": {},
                     "securityScheme": {},
@@ -4775,7 +7743,7 @@
               "api": {
                 "id": "27450329",
                 "method": "get",
-                "path": "/products/16",
+                "path": "/products/23",
                 "parameters": {
                   "query": [],
                   "path": [],
@@ -4926,7 +7894,7 @@
                       "description": "",
                       "type": "string",
                       "id": "mGfJJ1SP4k",
-                      "enable": true,
+                      "enable": false,
                       "name": "location_id",
                       "example": "2"
                     }

@@ -28,7 +28,7 @@ func NewProductRepository() ProductRepository {
 // --- Read ---
 
 // FindAll returns the paginated product list and the total count before limit/offset.
-func (r ProductRepository) FindAll(filters ProductFilters, page, limit, offset int) ([]models.Product, int64, error) {
+func (r ProductRepository) FindAll(filters ProductFilters, limit, offset int) ([]models.Product, int64, error) {
 	var products []models.Product
 
 	query := r.db.
@@ -93,7 +93,6 @@ func (r ProductRepository) PluckImagePaths(productID uint) ([]string, error) {
 
 // --- Create ---
 
-// Create inserts the product (with nested Attributes and Variants) using the provided transaction.
 func (r ProductRepository) Create(tx *gorm.DB, product *models.Product) error {
 	return tx.Create(product).Error
 }
@@ -108,6 +107,10 @@ func (r ProductRepository) UpdateFields(tx *gorm.DB, product *models.Product, up
 // UpdateImagePath sets the single "image" column (called after the main image file is committed).
 func (r ProductRepository) UpdateImagePath(productID uint, path string) error {
 	return r.db.Model(&models.Product{}).Where("id = ?", productID).Update("image", path).Error
+}
+
+func (r ProductRepository) UpdatePublished(productID uint, published bool) error {
+	return r.db.Model(&models.Product{}).Where("id = ?", productID).Update("published", published).Error
 }
 
 // --- Associations ---
@@ -129,31 +132,26 @@ func (r ProductRepository) ReplaceAttributes(tx *gorm.DB, product *models.Produc
 
 // --- Variants ---
 
-// DeleteVariants removes all ProductVariant rows for a product (CASCADE handles inventory).
 func (r ProductRepository) DeleteVariants(tx *gorm.DB, productID uint) error {
 	return tx.Where("product_id = ?", productID).Delete(&models.ProductVariant{}).Error
 }
 
-// CreateVariants bulk-inserts variant rows.
 func (r ProductRepository) CreateVariants(tx *gorm.DB, variants []models.ProductVariant) error {
 	return tx.Create(&variants).Error
 }
 
 // --- Gallery images ---
 
-// DeleteProductImages removes all ProductImage rows for a product.
 func (r ProductRepository) DeleteProductImages(tx *gorm.DB, productID uint) error {
 	return tx.Where("product_id = ?", productID).Delete(&models.ProductImage{}).Error
 }
 
-// CreateProductImages bulk-inserts gallery image rows.
 func (r ProductRepository) CreateProductImages(tx *gorm.DB, images []models.ProductImage) error {
 	return tx.Create(&images).Error
 }
 
 // --- Delete ---
 
-// SoftDelete issues GORM's soft-delete on the product row.
 func (r ProductRepository) SoftDelete(product *models.Product) error {
 	return r.db.Delete(product).Error
 }

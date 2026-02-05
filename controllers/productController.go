@@ -10,17 +10,9 @@ import (
 	"gorm.io/gorm"
 )
 
-// ProductController is thin: bind HTTP, call service, write JSON.
-type ProductController struct {
-	service services.ProductService
-}
-
-func NewProductController() ProductController {
-	return ProductController{service: services.NewProductService()}
-}
-
 // ListProducts parses pagination and filters from query params, delegates to the service.
-func (pc ProductController) ListProducts(c *gin.Context) {
+func ListProducts(c *gin.Context) {
+	service := services.NewProductService()
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
 
@@ -48,7 +40,7 @@ func (pc ProductController) ListProducts(c *gin.Context) {
 		}
 	}
 
-	products, total, err := pc.service.ListProducts(params)
+	products, total, err := service.ListProducts(params)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch products"})
 		return
@@ -64,14 +56,15 @@ func (pc ProductController) ListProducts(c *gin.Context) {
 }
 
 // GetProduct loads a single product by :id.
-func (pc ProductController) GetProduct(c *gin.Context) {
+func GetProduct(c *gin.Context) {
+	service := services.NewProductService()
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
 		return
 	}
 
-	product, err := pc.service.GetProduct(uint(id))
+	product, err := service.GetProduct(uint(id))
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
@@ -89,7 +82,8 @@ func (pc ProductController) GetProduct(c *gin.Context) {
 
 // CreateProduct binds the product form, extracts uploaded files, and delegates
 // the full create flow to the service.
-func (pc ProductController) CreateProduct(c *gin.Context) {
+func CreateProduct(c *gin.Context) {
+	service := services.NewProductService()
 	var form services.ProductForm
 	if err := c.ShouldBind(&form); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body", "details": err.Error()})
@@ -102,7 +96,7 @@ func (pc ProductController) CreateProduct(c *gin.Context) {
 	// Extract gallery images via the service's exported helper
 	var galleryFiles = services.CollectGalleryFiles(c)
 
-	product, err := pc.service.CreateProduct(
+	product, err := service.CreateProduct(
 		form,
 		mainImage,
 		galleryFiles,
@@ -128,7 +122,8 @@ func (pc ProductController) CreateProduct(c *gin.Context) {
 // UpdateProduct builds the partial-update map from PostForm fields (only
 // fields the client actually sends are included), extracts files, and
 // delegates to the service.
-func (pc ProductController) UpdateProduct(c *gin.Context) {
+func UpdateProduct(c *gin.Context) {
+	service := services.NewProductService()
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
@@ -188,7 +183,7 @@ func (pc ProductController) UpdateProduct(c *gin.Context) {
 	mainImage, _ := c.FormFile("image")
 	galleryFiles := services.CollectGalleryFiles(c)
 
-	product, err := pc.service.UpdateProduct(
+	product, err := service.UpdateProduct(
 		uint(id),
 		updates,
 		mainImage,
@@ -212,15 +207,49 @@ func (pc ProductController) UpdateProduct(c *gin.Context) {
 	})
 }
 
-// DeleteProduct soft-deletes the product and cleans up image files.
-func (pc ProductController) DeleteProduct(c *gin.Context) {
+// UpdateProductStatus toggles the published flag via JSON body { "published": bool }.
+func UpdateProductStatus(c *gin.Context) {
+	service := services.NewProductService()
 	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
 		return
 	}
 
-	if err := pc.service.DeleteProduct(uint(id)); err != nil {
+	var body struct {
+		Published bool `json:"published"`
+	}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body", "details": err.Error()})
+		return
+	}
+
+	product, err := service.TogglePublished(uint(id), body.Published)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update product status"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Product status updated successfully",
+		"data":    product,
+	})
+}
+
+// DeleteProduct soft-deletes the product and cleans up image files.
+func DeleteProduct(c *gin.Context) {
+	service := services.NewProductService()
+	id, err := strconv.ParseUint(c.Param("id"), 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid product ID"})
+		return
+	}
+
+	if err := service.DeleteProduct(uint(id)); err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
 			return

@@ -17,10 +17,7 @@ import (
 
 const productImageFolder = "uploads/products"
 
-// ProductForm is the set of scalar fields that arrive on both POST and PUT.
-// The controller binds this on Create; on Update it is unused (the controller
-// builds a map instead, because partial-update semantics need to distinguish
-// "not sent" from "sent as zero").
+// ProductForm is the set of scalar fields bound from multipart form data.
 type ProductForm struct {
 	Name          string  `form:"name"`
 	Description   string  `form:"description"`
@@ -73,7 +70,7 @@ func (s ProductService) ListProducts(params ProductListParams) ([]models.Product
 	}
 	params.Offset = (params.Page - 1) * params.Limit
 
-	return s.repo.FindAll(params.Filters, params.Page, params.Limit, params.Offset)
+	return s.repo.FindAll(params.Filters, params.Limit, params.Offset)
 }
 
 // GetProduct loads a single product by ID.
@@ -83,14 +80,7 @@ func (s ProductService) GetProduct(id uint) (models.Product, error) {
 
 // --- Create ---
 
-// CreateProduct orchestrates the full create flow:
-//  1. Validate required fields.
-//  2. Save uploaded files to temp.
-//  3. Parse attributes and variants from JSON strings.
-//  4. DB transaction: insert product + nested relations.
-//  5. Commit main image file, update DB with final path.
-//  6. Commit gallery images, insert ProductImage rows.
-//  7. Reload and return the product with all relations.
+// CreateProduct validates, persists the product and its relations, saves images, and reloads.
 func (s ProductService) CreateProduct(
 	form ProductForm,
 	mainImage *multipart.FileHeader,
@@ -217,13 +207,7 @@ func (s ProductService) CreateProduct(
 
 // --- Update ---
 
-// UpdateProduct orchestrates the full update flow:
-//  1. Fetch existing product (returns error if not found).
-//  2. Save any new images to temp.
-//  3. DB transaction: apply field updates, replace attributes, replace variants.
-//  4. Post-transaction: commit main image, update image column, remove old file.
-//  5. Post-transaction: commit gallery, replace ProductImage rows, remove old gallery files.
-//  6. Reload and return.
+// UpdateProduct applies partial field updates, replaces images, and reloads.
 func (s ProductService) UpdateProduct(
 	id uint,
 	updates map[string]interface{},
@@ -384,11 +368,25 @@ func (s ProductService) DeleteProduct(id uint) error {
 	return nil
 }
 
-// --- unexported helpers ---
+// --- Status ---
 
-// CollectGalleryFiles extracts the multipart form from the request context,
-// deduplicates file headers by filename+size, and returns the unique set.
-// Called by the controller to hand off the file headers before invoking the service.
+// TogglePublished flips the published flag on a single product.
+func (s ProductService) TogglePublished(id uint, published bool) (models.Product, error) {
+	if _, err := s.repo.FindByID(id); err != nil {
+		return models.Product{}, err
+	}
+
+	if err := s.repo.UpdatePublished(id, published); err != nil {
+		return models.Product{}, fmt.Errorf("failed to update status: %w", err)
+	}
+
+	return s.repo.FindByID(id)
+}
+
+// --- helpers ---
+
+// CollectGalleryFiles extracts gallery file headers from the multipart form,
+// deduplicating by filename+size.
 func CollectGalleryFiles(c *gin.Context) []*multipart.FileHeader {
 	form, err := c.MultipartForm()
 	if err != nil || form == nil {

@@ -72,17 +72,73 @@ func RegisterRoutes() *gin.Engine {
 		locations.DELETE("/:id", controllers.DeleteLocation)
 	}
 	
-	productCtrl := controllers.NewProductController()
-
 	products := r.Group("/products")
 	{
-		products.GET("/", productCtrl.ListProducts)
-		products.POST("/", productCtrl.CreateProduct)
-		products.GET("/:id", productCtrl.GetProduct)
-		products.PUT("/:id", productCtrl.UpdateProduct)
-		products.DELETE("/:id", productCtrl.DeleteProduct)
+		products.GET("/", controllers.ListProducts)
+		products.POST("/", controllers.CreateProduct)
+		products.GET("/:id", controllers.GetProduct)
+		products.PUT("/:id", controllers.UpdateProduct)
+		products.PATCH("/:id/status", controllers.UpdateProductStatus)
+		products.DELETE("/:id", controllers.DeleteProduct)
 	}
 	
+	customers := r.Group("/customers")
+	{
+		customers.GET("/", controllers.ListCustomers)
+		customers.POST("/", controllers.CreateCustomer)
+		customers.GET("/:id", controllers.GetCustomer)
+		customers.PUT("/:id", controllers.UpdateCustomer)
+		customers.DELETE("/:id", controllers.DeleteCustomer)
+	}
+
+	vendors := r.Group("/vendors")
+	{
+		vendors.GET("/", controllers.ListVendors)
+		vendors.POST("/", controllers.CreateVendor)
+		vendors.GET("/:id", controllers.GetVendor)
+		vendors.PUT("/:id", controllers.UpdateVendor)
+		vendors.DELETE("/:id", controllers.DeleteVendor)
+	}
+
+	staffRoutes := r.Group("/staff")
+	{
+		staffRoutes.GET("/", controllers.ListStaff)
+		staffRoutes.POST("/", controllers.CreateStaff)
+		staffRoutes.GET("/:id", controllers.GetStaff)
+		staffRoutes.PUT("/:id", controllers.UpdateStaff)
+		staffRoutes.DELETE("/:id", controllers.DeleteStaff)
+	}
+
+	staffRoles := r.Group("/staff-roles")
+	{
+		staffRoles.GET("/", controllers.ListStaffRoles)
+		staffRoles.POST("/", controllers.CreateStaffRole)
+		staffRoles.GET("/:id", controllers.GetStaffRole)
+		staffRoles.PUT("/:id", controllers.UpdateStaffRole)
+		staffRoles.DELETE("/:id", controllers.DeleteStaffRole)
+	}
+
+	salaryPayments := r.Group("/salary-payments")
+	{
+		salaryPayments.GET("/", controllers.ListSalaryPayments)
+		salaryPayments.POST("/", controllers.CreateSalaryPayment)
+		salaryPayments.GET("/:id", controllers.GetSalaryPayment)
+		salaryPayments.PUT("/:id", controllers.UpdateSalaryPayment)
+		salaryPayments.DELETE("/:id", controllers.DeleteSalaryPayment)
+	}
+
+	inventory := r.Group("/inventory")
+	{
+		inventory.GET("/", controllers.ListInventory)
+	}
+
+	transfers := r.Group("/transfers")
+	{
+		transfers.GET("/", controllers.ListTransfers)
+		transfers.POST("/", controllers.CreateTransfer)
+		transfers.PUT("/:id/cancel", controllers.CancelTransfer)
+	}
+
 	r.Group("/authors")
 	{
 		r.GET("/authors/", controllers.ListAuthors)
@@ -91,9 +147,6 @@ func RegisterRoutes() *gin.Engine {
 		r.PUT("/authors/:id", controllers.UpdateAuthor)
 		r.DELETE("/authors/:id", controllers.DeleteAuthor)
 	}
-
-
-
 
 
 
