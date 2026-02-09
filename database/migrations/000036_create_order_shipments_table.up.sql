@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS order_shipments (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    sell_id BIGINT UNSIGNED NOT NULL,
+    tracking_number VARCHAR(100) NOT NULL,
+    carrier VARCHAR(100) NOT NULL,
+    shipping_method VARCHAR(50) NULL,
+    status ENUM('pending', 'picked_up', 'in_transit', 'out_for_delivery', 'delivered', 'failed', 'returned') DEFAULT 'pending',
+    shipped_at TIMESTAMP NULL,
+    estimated_delivery TIMESTAMP NULL,
+    delivered_at TIMESTAMP NULL,
+    shipping_cost DECIMAL(10,2) DEFAULT 0.00,
+    weight DECIMAL(10,2) NULL COMMENT 'Weight in kg',
+    dimensions VARCHAR(50) NULL COMMENT 'LxWxH in cm',
+    notes TEXT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (sell_id) REFERENCES sells (id) ON DELETE CASCADE,
+    INDEX idx_order_shipments_sell_id (sell_id),
+    INDEX idx_order_shipments_tracking_number (tracking_number),
+    INDEX idx_order_shipments_status (status)
+);

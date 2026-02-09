@@ -139,6 +139,65 @@ func RegisterRoutes() *gin.Engine {
 		transfers.PUT("/:id/cancel", controllers.CancelTransfer)
 	}
 
+	sells := r.Group("/sells")
+	{
+		sells.GET("/", controllers.ListSells)
+		sells.GET("/stats", controllers.GetSellsStats)
+		sells.POST("/", controllers.CreateSell)
+		sells.GET("/:id", controllers.GetSell)
+		sells.PUT("/:id", controllers.UpdateSell)
+		sells.PATCH("/:id/status", controllers.UpdateSellStatus)
+		sells.DELETE("/:id", controllers.DeleteSell)
+	}
+
+	customerReturns := r.Group("/customer-returns")
+	{
+		customerReturns.GET("/", controllers.ListCustomerReturns)
+		customerReturns.GET("/stats", controllers.GetCustomerReturnStats)
+		customerReturns.POST("/", controllers.CreateCustomerReturn)
+		customerReturns.GET("/customer/:customerId", controllers.GetCustomerReturnsByCustomer)
+		customerReturns.GET("/:id", controllers.GetCustomerReturn)
+		customerReturns.PUT("/:id", controllers.UpdateCustomerReturn)
+		customerReturns.PATCH("/:id/approve", controllers.ApproveCustomerReturn)
+		customerReturns.PATCH("/:id/reject", controllers.RejectCustomerReturn)
+		customerReturns.DELETE("/:id", controllers.DeleteCustomerReturn)
+	}
+
+	vendorReturns := r.Group("/vendor-returns")
+	{
+		vendorReturns.GET("/", controllers.ListVendorReturns)
+		vendorReturns.GET("/stats", controllers.GetVendorReturnStats)
+		vendorReturns.POST("/", controllers.CreateVendorReturn)
+		vendorReturns.GET("/vendor/:vendorId", controllers.GetVendorReturnsByVendor)
+		vendorReturns.GET("/:id", controllers.GetVendorReturn)
+		vendorReturns.PUT("/:id", controllers.UpdateVendorReturn)
+		vendorReturns.PATCH("/:id/status", controllers.UpdateVendorReturnStatus)
+		vendorReturns.DELETE("/:id", controllers.DeleteVendorReturn)
+	}
+
+	shippingAddresses := r.Group("/shipping-addresses")
+	{
+		shippingAddresses.GET("/", controllers.ListShippingAddresses)
+		shippingAddresses.POST("/", controllers.CreateShippingAddress)
+		shippingAddresses.GET("/:id", controllers.GetShippingAddress)
+		shippingAddresses.PUT("/:id", controllers.UpdateShippingAddress)
+		shippingAddresses.DELETE("/:id", controllers.DeleteShippingAddress)
+		shippingAddresses.PATCH("/:id/set-default", controllers.SetDefaultShippingAddress)
+	}
+
+	shipments := r.Group("/shipments")
+	{
+		shipments.GET("/", controllers.ListOrderShipments)
+		shipments.GET("/stats", controllers.GetShipmentStats)
+		shipments.POST("/", controllers.CreateOrderShipment)
+		shipments.GET("/:id", controllers.GetOrderShipment)
+		shipments.PATCH("/:id/status", controllers.UpdateShipmentStatus)
+		shipments.POST("/:id/tracking", controllers.AddTrackingEvent)
+	}
+
+	// Public tracking endpoint (no auth required)
+	r.GET("/track/:trackingNumber", controllers.TrackShipment)
+
 	r.Group("/authors")
 	{
 		r.GET("/authors/", controllers.ListAuthors)

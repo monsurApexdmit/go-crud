@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS sells (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    invoice_no VARCHAR(50) NOT NULL UNIQUE,
+    order_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    customer_id BIGINT UNSIGNED NULL,
+    customer_name VARCHAR(255) NOT NULL,
+    method VARCHAR(50) NOT NULL DEFAULT 'Cash',
+    amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    shipping_cost DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    discount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    status VARCHAR(20) NOT NULL DEFAULT 'Pending',
+    notes TEXT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL,
+    FOREIGN KEY (customer_id) REFERENCES customers (id) ON DELETE SET NULL,
+    INDEX idx_sells_invoice_no (invoice_no),
+    INDEX idx_sells_customer_id (customer_id),
+    INDEX idx_sells_status (status),
+    INDEX idx_sells_method (method),
+    INDEX idx_sells_order_time (order_time),
+    INDEX idx_sells_deleted_at (deleted_at)
+);

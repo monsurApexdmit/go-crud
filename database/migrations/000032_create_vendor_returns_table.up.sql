@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS vendor_returns (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    return_number VARCHAR(50) NOT NULL UNIQUE,
+    vendor_id BIGINT UNSIGNED NOT NULL,
+    vendor_name VARCHAR(255) NOT NULL,
+    total_amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    status ENUM('pending', 'shipped', 'received_by_vendor', 'completed') NOT NULL DEFAULT 'pending',
+    return_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    completed_date TIMESTAMP NULL,
+    credit_type ENUM('refund', 'credit_note', 'replacement') NOT NULL,
+    notes TEXT NULL,
+    created_by VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL,
+    FOREIGN KEY (vendor_id) REFERENCES vendors (id) ON DELETE RESTRICT,
+    INDEX idx_vendor_returns_status (status),
+    INDEX idx_vendor_returns_vendor_id (vendor_id),
+    INDEX idx_vendor_returns_return_date (return_date),
+    INDEX idx_vendor_returns_deleted_at (deleted_at)
+);

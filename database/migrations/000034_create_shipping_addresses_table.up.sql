@@ -1,0 +1,22 @@
+CREATE TABLE IF NOT EXISTS shipping_addresses (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    customer_id BIGINT UNSIGNED NULL,
+    full_name VARCHAR(255) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    email VARCHAR(255) NULL,
+    address_line1 VARCHAR(255) NOT NULL,
+    address_line2 VARCHAR(255) NULL,
+    city VARCHAR(100) NOT NULL,
+    state VARCHAR(100) NOT NULL,
+    postal_code VARCHAR(20) NOT NULL,
+    country VARCHAR(100) NOT NULL DEFAULT 'Bangladesh',
+    is_default BOOLEAN DEFAULT FALSE,
+    address_type ENUM('home', 'office', 'other') DEFAULT 'home',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL,
+    FOREIGN KEY (customer_id) REFERENCES customers (id) ON DELETE CASCADE,
+    INDEX idx_shipping_addresses_customer_id (customer_id),
+    INDEX idx_shipping_addresses_is_default (is_default),
+    INDEX idx_shipping_addresses_deleted_at (deleted_at)
+);
