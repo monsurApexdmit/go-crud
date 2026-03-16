@@ -4,6 +4,7 @@ import "time"
 
 type StockTransfer struct {
 	ID             uint      `json:"id" gorm:"primaryKey;autoIncrement"`
+	CompanyID      uint      `json:"companyId" gorm:"column:company_id;not null"`
 	ProductID      uint      `json:"productId" gorm:"column:product_id;not null"`
 	Product        Product   `json:"product" gorm:"foreignKey:ProductID"`
 	VariantID      *uint     `json:"variantId" gorm:"column:variant_id"`

@@ -5,7 +5,7 @@ import (
 )
 
 type VariantInventory struct {
-	ID         uint     `gorm:"primaryKey" json:"id"`
+	ID         uint     `gorm:"primaryKey;autoIncrement" json:"id"`
 	VariantID  uint     `json:"variant_id"`
 	LocationID uint     `json:"location_id"`
 	Location   Location `gorm:"foreignKey:LocationID" json:"location,omitempty"`

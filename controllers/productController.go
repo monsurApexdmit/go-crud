@@ -4,8 +4,10 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
+	"go-crud/middlewares"
 	"go-crud/services"
 	"gorm.io/gorm"
 )
@@ -16,10 +18,14 @@ func ListProducts(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
 
+	companyID, _ := middlewares.GetCompanyID(c)
 	params := services.ProductListParams{
 		Page:  page,
 		Limit: limit,
 	}
+
+	// Add company_id to filters
+	params.Filters.CompanyID = &companyID
 
 	if v := c.Query("category_id"); v != "" {
 		if id, err := strconv.ParseUint(v, 10, 32); err == nil {
@@ -64,7 +70,8 @@ func GetProduct(c *gin.Context) {
 		return
 	}
 
-	product, err := service.GetProduct(uint(id))
+	companyID, _ := middlewares.GetCompanyID(c)
+	product, err := service.GetProductByCompany(uint(id), companyID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
@@ -96,17 +103,23 @@ func CreateProduct(c *gin.Context) {
 	// Extract gallery images via the service's exported helper
 	var galleryFiles = services.CollectGalleryFiles(c)
 
+	companyID, _ := middlewares.GetCompanyID(c)
 	product, err := service.CreateProduct(
 		form,
 		mainImage,
 		galleryFiles,
 		c.PostForm("attributes"),
 		c.PostForm("variants"),
+		companyID,
 		c,
 	)
 	if err != nil {
 		if err.Error() == "product name is required" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		if strings.Contains(err.Error(), "a foreign key constraint fails") {
+			c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Invalid reference: vendor, category, or location ID does not exist"})
 			return
 		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create product", "details": err.Error()})
@@ -183,8 +196,10 @@ func UpdateProduct(c *gin.Context) {
 	mainImage, _ := c.FormFile("image")
 	galleryFiles := services.CollectGalleryFiles(c)
 
+	companyID, _ := middlewares.GetCompanyID(c)
 	product, err := service.UpdateProduct(
 		uint(id),
+		companyID,
 		updates,
 		mainImage,
 		galleryFiles,
@@ -195,6 +210,10 @@ func UpdateProduct(c *gin.Context) {
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
+			return
+		}
+		if strings.Contains(err.Error(), "a foreign key constraint fails") {
+			c.JSON(http.StatusUnprocessableEntity, gin.H{"error": "Invalid reference: vendor, category, or location ID does not exist"})
 			return
 		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update product", "details": err.Error()})
@@ -224,7 +243,8 @@ func UpdateProductStatus(c *gin.Context) {
 		return
 	}
 
-	product, err := service.TogglePublished(uint(id), body.Published)
+	companyID, _ := middlewares.GetCompanyID(c)
+	product, err := service.TogglePublished(uint(id), companyID, body.Published)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
@@ -249,7 +269,8 @@ func DeleteProduct(c *gin.Context) {
 		return
 	}
 
-	if err := service.DeleteProduct(uint(id)); err != nil {
+	companyID, _ := middlewares.GetCompanyID(c)
+	if err := service.DeleteProductByCompany(uint(id), companyID); err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
 			return

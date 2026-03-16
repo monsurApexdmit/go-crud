@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go-crud/database"
+	"go-crud/middlewares"
 	"go-crud/models"
 	"gorm.io/gorm"
 )
@@ -17,6 +18,14 @@ import (
 func ListVendorReturns(c *gin.Context) {
 	var returns []models.VendorReturn
 	query := database.DB.Model(&models.VendorReturn{})
+
+	// Filter by company_id
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	query = query.Where("company_id = ?", companyID)
 
 	// Search by return number or vendor name
 	if search := c.Query("search"); search != "" {
@@ -69,7 +78,14 @@ func ListVendorReturns(c *gin.Context) {
 // GetVendorReturn retrieves a single vendor return by ID
 func GetVendorReturn(c *gin.Context) {
 	var ret models.VendorReturn
-	if err := database.DB.Preload("Vendor").Preload("Items").First(&ret, c.Param("id")).Error; err != nil {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	if err := database.DB.Preload("Vendor").Preload("Items").
+		Where("id = ? AND company_id = ?", c.Param("id"), companyID).
+		First(&ret).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Vendor return not found"})
 		return
 	}
@@ -83,6 +99,14 @@ func CreateVendorReturn(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body", "details": err.Error()})
 		return
 	}
+
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+
+	ret.CompanyID = companyID
 
 	// Generate return number if not provided
 	if ret.ReturnNumber == "" {
@@ -99,11 +123,6 @@ func CreateVendorReturn(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Vendor name is required"})
 		return
 	}
-	if ret.CreatedBy == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "CreatedBy is required"})
-		return
-	}
-
 	// Validate status
 	validStatuses := []string{"pending", "shipped", "received_by_vendor", "completed"}
 	if ret.Status != "" && !contains(validStatuses, ret.Status) {
@@ -187,7 +206,12 @@ func CreateVendorReturn(c *gin.Context) {
 // UpdateVendorReturn updates an existing vendor return
 func UpdateVendorReturn(c *gin.Context) {
 	var ret models.VendorReturn
-	if err := database.DB.First(&ret, c.Param("id")).Error; err != nil {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&ret).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Vendor return not found"})
 		return
 	}
@@ -229,7 +253,12 @@ func UpdateVendorReturn(c *gin.Context) {
 // UpdateVendorReturnStatus updates only the status of a vendor return
 func UpdateVendorReturnStatus(c *gin.Context) {
 	var ret models.VendorReturn
-	if err := database.DB.First(&ret, c.Param("id")).Error; err != nil {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&ret).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Vendor return not found"})
 		return
 	}
@@ -268,7 +297,12 @@ func UpdateVendorReturnStatus(c *gin.Context) {
 // DeleteVendorReturn soft-deletes a vendor return
 func DeleteVendorReturn(c *gin.Context) {
 	var ret models.VendorReturn
-	if err := database.DB.First(&ret, c.Param("id")).Error; err != nil {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&ret).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Vendor return not found"})
 		return
 	}
@@ -287,12 +321,18 @@ func GetVendorReturnStats(c *gin.Context) {
 		TotalCreditAmount float64 `json:"totalCreditAmount"`
 	}
 
-	database.DB.Model(&models.VendorReturn{}).Count(&stats.Total)
-	database.DB.Model(&models.VendorReturn{}).Where("status = ?", "pending").Count(&stats.Pending)
-	database.DB.Model(&models.VendorReturn{}).Where("status = ?", "shipped").Count(&stats.Shipped)
-	database.DB.Model(&models.VendorReturn{}).Where("status = ?", "completed").Count(&stats.Completed)
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+
+	database.DB.Model(&models.VendorReturn{}).Where("company_id = ?", companyID).Count(&stats.Total)
+	database.DB.Model(&models.VendorReturn{}).Where("status = ? AND company_id = ?", "pending", companyID).Count(&stats.Pending)
+	database.DB.Model(&models.VendorReturn{}).Where("status = ? AND company_id = ?", "shipped", companyID).Count(&stats.Shipped)
+	database.DB.Model(&models.VendorReturn{}).Where("status = ? AND company_id = ?", "completed", companyID).Count(&stats.Completed)
 	database.DB.Model(&models.VendorReturn{}).
-		Where("status = ?", "completed").
+		Where("status = ? AND company_id = ?", "completed", companyID).
 		Select("COALESCE(SUM(total_amount), 0)").Scan(&stats.TotalCreditAmount)
 
 	c.JSON(http.StatusOK, gin.H{"message": "Statistics retrieved successfully", "data": stats})
@@ -303,7 +343,13 @@ func GetVendorReturnsByVendor(c *gin.Context) {
 	var returns []models.VendorReturn
 	vendorID := c.Param("vendorId")
 
-	if err := database.DB.Where("vendor_id = ?", vendorID).
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+
+	if err := database.DB.Where("vendor_id = ? AND company_id = ?", vendorID, companyID).
 		Preload("Vendor").Preload("Items").
 		Order("return_date DESC").
 		Find(&returns).Error; err != nil {

@@ -1,7 +1,7 @@
 package models
 import "time"
 type Book struct {
-    ID     uint   `gorm:"primaryKey" json:"id"`
+    ID     uint   `gorm:"primaryKey;autoIncrement" json:"id"`
     Title  string `json:"title"`
     AuthorID  uint      `json:"author_id"`           // Foreign key column
     Author    Author    `json:"author" gorm:"foreignKey:AuthorID"` 

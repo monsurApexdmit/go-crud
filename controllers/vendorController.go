@@ -7,13 +7,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"go-crud/database"
+	"go-crud/middlewares"
 	"go-crud/models"
 )
 
 func ListVendors(c *gin.Context) {
 	var vendors []models.Vendor
 
-	query := database.DB.Preload("User").Preload("User.Role").Model(&models.Vendor{})
+	companyID, _ := middlewares.GetCompanyID(c)
+	query := database.DB.Preload("User").Preload("User.Role").Model(&models.Vendor{}).Where("company_id = ?", companyID)
 
 	if search := c.Query("search"); search != "" {
 		like := "%" + search + "%"
@@ -52,7 +54,8 @@ func ListVendors(c *gin.Context) {
 
 func GetVendor(c *gin.Context) {
 	var vendor models.Vendor
-	if err := database.DB.Preload("User").Preload("User.Role").First(&vendor, c.Param("id")).Error; err != nil {
+	companyID, _ := middlewares.GetCompanyID(c)
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).Preload("User").Preload("User.Role").First(&vendor).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Vendor not found"})
 		return
 	}
@@ -70,6 +73,9 @@ func CreateVendor(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Name and email are required"})
 		return
 	}
+
+	companyID, _ := middlewares.GetCompanyID(c)
+	vendor.CompanyID = companyID
 
 	// Create linked user with Vendor role (id=4)
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte("changeme"), bcrypt.DefaultCost)
@@ -100,7 +106,8 @@ func CreateVendor(c *gin.Context) {
 
 func UpdateVendor(c *gin.Context) {
 	var vendor models.Vendor
-	if err := database.DB.First(&vendor, c.Param("id")).Error; err != nil {
+	companyID, _ := middlewares.GetCompanyID(c)
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&vendor).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Vendor not found"})
 		return
 	}
@@ -133,7 +140,8 @@ func UpdateVendor(c *gin.Context) {
 
 func DeleteVendor(c *gin.Context) {
 	var vendor models.Vendor
-	if err := database.DB.First(&vendor, c.Param("id")).Error; err != nil {
+	companyID, _ := middlewares.GetCompanyID(c)
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&vendor).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Vendor not found"})
 		return
 	}

@@ -13,7 +13,7 @@ func getJWTSecret() string {
 	if secret := os.Getenv("JWT_SECRET"); secret != "" {
 		return secret
 	}
-	return "CHANGE_THIS_SECRET"
+	return "your-secret-key-change-in-production"
 }
 
 func GenerateJWT(userID uint) (string, error) {

@@ -10,6 +10,7 @@ import (
 // ProductFilters carries the optional WHERE clauses for the list query.
 // Nil pointers are skipped.
 type ProductFilters struct {
+	CompanyID  *uint
 	CategoryID *uint
 	VendorID   *uint
 	LocationID *uint
@@ -39,6 +40,9 @@ func (r ProductRepository) FindAll(filters ProductFilters, limit, offset int) ([
 		Preload("Variants.Inventory.Location").
 		Preload("Images")
 
+	if filters.CompanyID != nil {
+		query = query.Where("company_id = ?", *filters.CompanyID)
+	}
 	if filters.CategoryID != nil {
 		query = query.Where("category_id = ?", *filters.CategoryID)
 	}
@@ -72,6 +76,21 @@ func (r ProductRepository) FindByID(id uint) (models.Product, error) {
 		Preload("Variants.Inventory.Location").
 		Preload("Images").
 		First(&product, id).Error
+	return product, err
+}
+
+// FindByIDAndCompany loads a single product with company_id check.
+func (r ProductRepository) FindByIDAndCompany(id, companyID uint) (models.Product, error) {
+	var product models.Product
+	err := r.db.
+		Where("id = ? AND company_id = ?", id, companyID).
+		Preload("Category").
+		Preload("Vendor").
+		Preload("Location").
+		Preload("Attributes").
+		Preload("Variants.Inventory.Location").
+		Preload("Images").
+		First(&product).Error
 	return product, err
 }
 
@@ -133,11 +152,15 @@ func (r ProductRepository) ReplaceAttributes(tx *gorm.DB, product *models.Produc
 // --- Variants ---
 
 func (r ProductRepository) DeleteVariants(tx *gorm.DB, productID uint) error {
-	return tx.Where("product_id = ?", productID).Delete(&models.ProductVariant{}).Error
+	return tx.Unscoped().Where("product_id = ?", productID).Delete(&models.ProductVariant{}).Error
 }
 
 func (r ProductRepository) CreateVariants(tx *gorm.DB, variants []models.ProductVariant) error {
 	return tx.Create(&variants).Error
+}
+
+func (r ProductRepository) CreateVariantInventory(tx *gorm.DB, inventory []models.VariantInventory) error {
+	return tx.Create(&inventory).Error
 }
 
 // --- Gallery images ---

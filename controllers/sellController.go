@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go-crud/database"
+	"go-crud/middlewares"
 	"go-crud/models"
 	"gorm.io/gorm"
 )
@@ -17,6 +18,14 @@ import (
 func ListSells(c *gin.Context) {
 	var sells []models.Sell
 	query := database.DB.Model(&models.Sell{})
+
+	// Filter by company_id
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	query = query.Where("company_id = ?", companyID)
 
 	// Search by customer name
 	if search := c.Query("search"); search != "" {
@@ -114,6 +123,11 @@ func ListSells(c *gin.Context) {
 // GetSell retrieves a single sell by ID
 func GetSell(c *gin.Context) {
 	var sell models.Sell
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
 	if err := database.DB.
 		Preload("Customer").
 		Preload("ShippingAddress").
@@ -122,19 +136,159 @@ func GetSell(c *gin.Context) {
 		Preload("Shipments.TrackingHistory", func(db *gorm.DB) *gorm.DB {
 			return db.Order("event_time DESC")
 		}).
-		First(&sell, c.Param("id")).Error; err != nil {
+		Where("id = ? AND company_id = ?", c.Param("id"), companyID).
+		First(&sell).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Sell not found"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Sell fetched successfully", "data": sell})
 }
 
+// GetSellByInvoice retrieves a single sell by invoice number
+func GetSellByInvoice(c *gin.Context) {
+	var sell models.Sell
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	if err := database.DB.
+		Preload("Customer").
+		Preload("ShippingAddress").
+		Preload("Items").
+		Preload("Shipments").
+		Preload("Shipments.TrackingHistory", func(db *gorm.DB) *gorm.DB {
+			return db.Order("event_time DESC")
+		}).
+		Where("invoice_no = ? AND company_id = ?", c.Param("invoiceNo"), companyID).
+		First(&sell).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Sell not found"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Sell fetched successfully", "data": sell})
+}
+
+// sellItemInput accepts both "unitPrice" and "price" from the frontend
+type sellItemInput struct {
+	ProductID        *uint   `json:"productId"`
+	ProductIDSnake   *uint   `json:"product_id"`
+	VariantID        *uint   `json:"variantId"`
+	VariantIDSnake   *uint   `json:"variant_id"`
+	InventoryID      *uint   `json:"inventoryId"`
+	InventoryIDSnake *uint   `json:"inventory_id"`
+	ProductName      string  `json:"productName"`
+	VariantName      string  `json:"variantName"`
+	Quantity         int     `json:"quantity"`
+	UnitPrice        float64 `json:"unitPrice"`
+	Price            float64 `json:"price"` // alias accepted from frontend
+}
+
+type createSellInput struct {
+	InvoiceNo            string          `json:"invoiceNo"`
+	OrderTime            *time.Time      `json:"orderTime"`
+	CustomerID           *uint           `json:"customerId"`
+	CustomerName         string          `json:"customerName"`
+	ShippingAddressID    *uint           `json:"shippingAddressId"`
+	ShippingFullName     string          `json:"shippingFullName"`
+	ShippingPhone        string          `json:"shippingPhone"`
+	ShippingEmail        string          `json:"shippingEmail"`
+	ShippingAddressLine1 string          `json:"shippingAddressLine1"`
+	ShippingAddressLine2 string          `json:"shippingAddressLine2"`
+	ShippingCity         string          `json:"shippingCity"`
+	ShippingState        string          `json:"shippingState"`
+	ShippingPostalCode   string          `json:"shippingPostalCode"`
+	ShippingCountry      string          `json:"shippingCountry"`
+	ShippingAddressType  string          `json:"shippingAddressType"`
+	Method               string          `json:"method"`
+	Amount               float64         `json:"amount"`
+	ShippingCost         float64         `json:"shippingCost"`
+	ShippingMethod       string          `json:"shippingMethod"`
+	CouponID             *uint           `json:"couponId"`
+	CouponCode           string          `json:"couponCode"`
+	Discount             float64         `json:"discount"`
+	Status               string          `json:"status"`
+	Notes                string          `json:"notes"`
+	Items                []sellItemInput `json:"items"`
+}
+
 // CreateSell creates a new sell record
 func CreateSell(c *gin.Context) {
-	var sell models.Sell
-	if err := c.ShouldBindJSON(&sell); err != nil {
+	var input createSellInput
+	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body", "details": err.Error()})
 		return
+	}
+
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+
+	// Map input to sell model
+	sell := models.Sell{
+		CompanyID:            companyID,
+		InvoiceNo:            input.InvoiceNo,
+		CustomerID:           input.CustomerID,
+		CustomerName:         input.CustomerName,
+		ShippingAddressID:    input.ShippingAddressID,
+		ShippingFullName:     input.ShippingFullName,
+		ShippingPhone:        input.ShippingPhone,
+		ShippingEmail:        input.ShippingEmail,
+		ShippingAddressLine1: input.ShippingAddressLine1,
+		ShippingAddressLine2: input.ShippingAddressLine2,
+		ShippingCity:         input.ShippingCity,
+		ShippingState:        input.ShippingState,
+		ShippingPostalCode:   input.ShippingPostalCode,
+		ShippingCountry:      input.ShippingCountry,
+		ShippingAddressType:  input.ShippingAddressType,
+		Method:               input.Method,
+		Amount:               input.Amount,
+		ShippingCost:         input.ShippingCost,
+		ShippingMethod:       input.ShippingMethod,
+		CouponID:             input.CouponID,
+		CouponCode:           input.CouponCode,
+		Discount:             input.Discount,
+		Status:               input.Status,
+		Notes:                input.Notes,
+	}
+	if input.OrderTime != nil {
+		sell.OrderTime = *input.OrderTime
+	}
+
+	// Map items — resolve unitPrice from either unitPrice or price field
+	sell.Items = make([]models.OrderItem, len(input.Items))
+	for i, it := range input.Items {
+		productID := it.ProductID
+		if productID == nil {
+			productID = it.ProductIDSnake
+		}
+		variantID := it.VariantID
+		if variantID == nil {
+			variantID = it.VariantIDSnake
+		}
+		inventoryID := it.InventoryID
+		if inventoryID == nil {
+			inventoryID = it.InventoryIDSnake
+		}
+		unitPrice := it.UnitPrice
+		if unitPrice == 0 && it.Price > 0 {
+			unitPrice = it.Price
+		}
+		qty := it.Quantity
+		if qty == 0 {
+			qty = 1
+		}
+		sell.Items[i] = models.OrderItem{
+			ProductID:   productID,
+			VariantID:   variantID,
+			InventoryID: inventoryID,
+			ProductName: it.ProductName,
+			VariantName: it.VariantName,
+			Quantity:    qty,
+			UnitPrice:   unitPrice,
+			TotalPrice:  unitPrice * float64(qty),
+		}
 	}
 
 	// Generate invoice number if not provided
@@ -242,17 +396,33 @@ func CreateSell(c *gin.Context) {
 		sell.ShippingAddressType = addressToUse.AddressType
 	}
 
-	// Create sell and items in a transaction
+	// Check for duplicate invoice number within company
+	var existingCount int64
+	database.DB.Model(&models.Sell{}).Where("invoice_no = ? AND company_id = ?", sell.InvoiceNo, companyID).Count(&existingCount)
+	if existingCount > 0 {
+		c.JSON(http.StatusConflict, gin.H{"error": "Invoice number already exists"})
+		return
+	}
+
+	// Create sell and items in a transaction; deduct stock immediately for active orders
 	err := database.DB.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Create(&sell).Error; err != nil {
 			return err
 		}
-		// Items are created automatically if included in the sell struct via GORM associations
+
+		if err := deductOrderItemsStock(tx, sell.Items); err != nil {
+			return err
+		}
+		if err := tx.Model(&sell).Update("stock_deducted", true).Error; err != nil {
+			return err
+		}
+		sell.StockDeducted = true
+
 		return nil
 	})
 	if err != nil {
-		if strings.Contains(err.Error(), "Duplicate entry") {
-			c.JSON(http.StatusConflict, gin.H{"error": "Invoice number already exists"})
+		if strings.Contains(err.Error(), "insufficient stock") {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create sell"})
@@ -268,7 +438,12 @@ func CreateSell(c *gin.Context) {
 // UpdateSell updates an existing sell record
 func UpdateSell(c *gin.Context) {
 	var sell models.Sell
-	if err := database.DB.First(&sell, c.Param("id")).Error; err != nil {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&sell).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Sell not found"})
 		return
 	}
@@ -321,7 +496,13 @@ func UpdateSell(c *gin.Context) {
 		sell.Notes = input.Notes
 	}
 
-	if err := database.DB.Save(&sell).Error; err != nil {
+	if err := database.DB.Transaction(func(tx *gorm.DB) error {
+		return tx.Save(&sell).Error
+	}); err != nil {
+		if strings.Contains(err.Error(), "insufficient stock") {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update sell"})
 		return
 	}
@@ -333,7 +514,12 @@ func UpdateSell(c *gin.Context) {
 // UpdateSellStatus updates only the status of a sell
 func UpdateSellStatus(c *gin.Context) {
 	var sell models.Sell
-	if err := database.DB.First(&sell, c.Param("id")).Error; err != nil {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&sell).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Sell not found"})
 		return
 	}
@@ -352,8 +538,14 @@ func UpdateSellStatus(c *gin.Context) {
 		return
 	}
 
-	sell.Status = input.Status
-	if err := database.DB.Save(&sell).Error; err != nil {
+	if err := database.DB.Transaction(func(tx *gorm.DB) error {
+		sell.Status = input.Status
+		return tx.Save(&sell).Error
+	}); err != nil {
+		if strings.Contains(err.Error(), "insufficient stock") {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update status"})
 		return
 	}
@@ -365,13 +557,174 @@ func UpdateSellStatus(c *gin.Context) {
 // DeleteSell soft-deletes a sell record
 func DeleteSell(c *gin.Context) {
 	var sell models.Sell
-	if err := database.DB.First(&sell, c.Param("id")).Error; err != nil {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).Preload("Items").First(&sell).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Sell not found"})
 		return
 	}
 
-	database.DB.Delete(&sell)
+	err := database.DB.Transaction(func(tx *gorm.DB) error {
+		if sell.StockDeducted {
+			if err := restoreOrderItemsStock(tx, sell.Items); err != nil {
+				return err
+			}
+			sell.StockDeducted = false
+		}
+		if err := tx.Save(&sell).Error; err != nil {
+			return err
+		}
+		return tx.Delete(&sell).Error
+	})
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete sell and restore stock"})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"message": "Sell deleted successfully"})
+}
+
+func restoreOrderItemsStock(tx *gorm.DB, items []models.OrderItem) error {
+	for _, item := range items {
+		qty := item.Quantity
+		if qty <= 0 {
+			continue
+		}
+
+		if item.VariantID != nil {
+			if item.InventoryID != nil {
+				result := tx.Model(&models.VariantInventory{}).
+					Where("id = ? AND variant_id = ?", *item.InventoryID, *item.VariantID).
+					UpdateColumn("quantity", gorm.Expr("quantity + ?", qty))
+				if result.Error != nil {
+					return result.Error
+				}
+			} else {
+				var inv models.VariantInventory
+				if err := tx.Where("variant_id = ?", *item.VariantID).First(&inv).Error; err == nil {
+					if err := tx.Model(&inv).UpdateColumn("quantity", gorm.Expr("quantity + ?", qty)).Error; err != nil {
+						return err
+					}
+				}
+			}
+
+			if err := syncVariantStock(tx, *item.VariantID); err != nil {
+				return err
+			}
+			
+			var variant models.ProductVariant
+			if err := tx.First(&variant, *item.VariantID).Error; err != nil {
+				return fmt.Errorf("variant %d not found", *item.VariantID)
+			}
+			if err := syncProductStockFromVariants(tx, variant.ProductID); err != nil {
+				return err
+			}
+			continue
+		}
+
+		if item.ProductID == nil {
+			continue
+		}
+		if err := tx.Model(&models.Product{}).
+			Where("id = ?", *item.ProductID).
+			UpdateColumn("stock", gorm.Expr("stock + ?", qty)).Error; err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func deductOrderItemsStock(tx *gorm.DB, items []models.OrderItem) error {
+	for _, item := range items {
+		qty := item.Quantity
+		if qty <= 0 {
+			continue
+		}
+
+		if item.VariantID != nil {
+			var variant models.ProductVariant
+			if err := tx.First(&variant, *item.VariantID).Error; err != nil {
+				return fmt.Errorf("variant %d not found", *item.VariantID)
+			}
+			if variant.Stock < qty {
+				return fmt.Errorf("insufficient stock for variant '%s' (available: %d, requested: %d)", variant.Name, variant.Stock, qty)
+			}
+
+			if item.InventoryID != nil {
+				result := tx.Model(&models.VariantInventory{}).
+					Where("id = ? AND variant_id = ? AND quantity >= ?", *item.InventoryID, *item.VariantID, qty).
+					UpdateColumn("quantity", gorm.Expr("quantity - ?", qty))
+				if result.Error != nil {
+					return result.Error
+				}
+				if result.RowsAffected == 0 {
+					return fmt.Errorf("insufficient stock for inventory %d", *item.InventoryID)
+				}
+			} else {
+				remaining := qty
+				var invRows []models.VariantInventory
+				if err := tx.Where("variant_id = ? AND quantity > 0", *item.VariantID).
+					Order("quantity DESC").
+					Find(&invRows).Error; err != nil {
+					return err
+				}
+				for i := range invRows {
+					if remaining <= 0 {
+						break
+					}
+					deduct := remaining
+					if invRows[i].Quantity < deduct {
+						deduct = invRows[i].Quantity
+					}
+					if err := tx.Model(&invRows[i]).UpdateColumn("quantity", invRows[i].Quantity-deduct).Error; err != nil {
+						return err
+					}
+					remaining -= deduct
+				}
+				if remaining > 0 {
+					return fmt.Errorf("insufficient stock for variant '%s' (available: %d, requested: %d)", variant.Name, variant.Stock, qty)
+				}
+			}
+
+			if err := syncVariantStock(tx, *item.VariantID); err != nil {
+				return err
+			}
+			if err := syncProductStockFromVariants(tx, variant.ProductID); err != nil {
+				return err
+			}
+			continue
+		}
+
+		if item.ProductID == nil {
+			continue
+		}
+		result := tx.Model(&models.Product{}).
+			Where("id = ? AND stock >= ?", *item.ProductID, qty).
+			UpdateColumn("stock", gorm.Expr("stock - ?", qty))
+		if result.Error != nil {
+			return result.Error
+		}
+		if result.RowsAffected == 0 {
+			return fmt.Errorf("insufficient stock for product %d", *item.ProductID)
+		}
+	}
+	return nil
+}
+
+func syncProductStockFromVariants(tx *gorm.DB, productID uint) error {
+	var total int
+	if err := tx.Model(&models.ProductVariant{}).
+		Where("product_id = ?", productID).
+		Select("COALESCE(SUM(stock), 0)").
+		Scan(&total).Error; err != nil {
+		return err
+	}
+	return tx.Model(&models.Product{}).
+		Where("id = ?", productID).
+		Update("stock", total).Error
 }
 
 // generateInvoiceNo generates a unique invoice number
@@ -382,23 +735,29 @@ func generateInvoiceNo() string {
 // GetSellsStats returns summary statistics for sells/orders
 func GetSellsStats(c *gin.Context) {
 	var stats struct {
-		TotalSells    int64   `json:"totalSells"`
-		TotalRevenue  float64 `json:"totalRevenue"`
-		PendingOrders int64   `json:"pendingOrders"`
-		ProcessingOrders int64 `json:"processingOrders"`
-		DeliveredOrders int64 `json:"deliveredOrders"`
+		TotalSells       int64   `json:"totalSells"`
+		TotalRevenue     float64 `json:"totalRevenue"`
+		PendingOrders    int64   `json:"pendingOrders"`
+		ProcessingOrders int64   `json:"processingOrders"`
+		DeliveredOrders  int64   `json:"deliveredOrders"`
+	}
+
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
 	}
 
 	// Total sells
-	database.DB.Model(&models.Sell{}).Count(&stats.TotalSells)
+	database.DB.Model(&models.Sell{}).Where("company_id = ?", companyID).Count(&stats.TotalSells)
 
 	// Total revenue
-	database.DB.Model(&models.Sell{}).Select("COALESCE(SUM(amount), 0)").Scan(&stats.TotalRevenue)
+	database.DB.Model(&models.Sell{}).Where("company_id = ?", companyID).Select("COALESCE(SUM(amount), 0)").Scan(&stats.TotalRevenue)
 
 	// Status counts
-	database.DB.Model(&models.Sell{}).Where("status = ?", "Pending").Count(&stats.PendingOrders)
-	database.DB.Model(&models.Sell{}).Where("status = ?", "Processing").Count(&stats.ProcessingOrders)
-	database.DB.Model(&models.Sell{}).Where("status = ?", "Delivered").Count(&stats.DeliveredOrders)
+	database.DB.Model(&models.Sell{}).Where("status = ? AND company_id = ?", "Pending", companyID).Count(&stats.PendingOrders)
+	database.DB.Model(&models.Sell{}).Where("status = ? AND company_id = ?", "Processing", companyID).Count(&stats.ProcessingOrders)
+	database.DB.Model(&models.Sell{}).Where("status = ? AND company_id = ?", "Delivered", companyID).Count(&stats.DeliveredOrders)
 
 	c.JSON(http.StatusOK, gin.H{"message": "Statistics retrieved successfully", "data": stats})
 }

@@ -7,13 +7,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"go-crud/database"
+	"go-crud/middlewares"
 	"go-crud/models"
 )
 
 func ListCustomers(c *gin.Context) {
 	var customers []models.Customer
 
-	query := database.DB.Preload("User").Preload("User.Role").Model(&models.Customer{})
+	companyID, _ := middlewares.GetCompanyID(c)
+	query := database.DB.Preload("User").Preload("User.Role").Model(&models.Customer{}).Where("company_id = ?", companyID)
 
 	if search := c.Query("search"); search != "" {
 		like := "%" + search + "%"
@@ -55,7 +57,8 @@ func ListCustomers(c *gin.Context) {
 
 func GetCustomer(c *gin.Context) {
 	var customer models.Customer
-	if err := database.DB.Preload("User").Preload("User.Role").First(&customer, c.Param("id")).Error; err != nil {
+	companyID, _ := middlewares.GetCompanyID(c)
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).Preload("User").Preload("User.Role").First(&customer).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Customer not found"})
 		return
 	}
@@ -73,6 +76,9 @@ func CreateCustomer(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Name and email are required"})
 		return
 	}
+
+	companyID, _ := middlewares.GetCompanyID(c)
+	customer.CompanyID = companyID
 
 	// Create linked user with Customer role (id=3)
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte("changeme"), bcrypt.DefaultCost)
@@ -104,7 +110,8 @@ func CreateCustomer(c *gin.Context) {
 
 func UpdateCustomer(c *gin.Context) {
 	var customer models.Customer
-	if err := database.DB.First(&customer, c.Param("id")).Error; err != nil {
+	companyID, _ := middlewares.GetCompanyID(c)
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&customer).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Customer not found"})
 		return
 	}
@@ -137,7 +144,8 @@ func UpdateCustomer(c *gin.Context) {
 
 func DeleteCustomer(c *gin.Context) {
 	var customer models.Customer
-	if err := database.DB.First(&customer, c.Param("id")).Error; err != nil {
+	companyID, _ := middlewares.GetCompanyID(c)
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&customer).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Customer not found"})
 		return
 	}

@@ -7,21 +7,122 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go-crud/database"
+	"go-crud/middlewares"
 	"go-crud/models"
 	"gorm.io/gorm"
 )
 
 var errInsufficientStock = errors.New("insufficient stock")
 
+// GetProductsByLocation returns all products that have stock at a given warehouse/location.
+// Uses the same preload logic as ListProducts.
+// GET /transfers/products-by-location/:location_id
+// Query params: search (name/sku), page, limit
+func GetProductsByLocation(c *gin.Context) {
+	locationID, err := strconv.ParseUint(c.Param("location_id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid location_id"})
+		return
+	}
+
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "50"))
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 || limit > 100 {
+		limit = 50
+	}
+	offset := (page - 1) * limit
+
+	// Products at this location = simple products with location_id match
+	// OR products that have at least one variant with inventory at this location.
+	// Variants are filtered to only those with stock at the requested location.
+	query := database.DB.
+		Preload("Category").
+		Preload("Vendor").
+		Preload("Location").
+		Preload("Attributes").
+		Preload("Variants", func(db *gorm.DB) *gorm.DB {
+			return db.Where(
+				"id IN (SELECT variant_id FROM variant_inventory WHERE location_id = ? AND quantity > 0)",
+				locationID,
+			)
+		}).
+		Preload("Variants.Inventory", func(db *gorm.DB) *gorm.DB {
+			return db.Where("location_id = ?", locationID)
+		}).
+		Preload("Variants.Inventory.Location").
+		Preload("Images").
+		Where(`
+			products.deleted_at IS NULL AND products.company_id = ? AND (
+				products.location_id = ?
+				OR products.id IN (
+					SELECT DISTINCT pv.product_id
+					FROM product_variants pv
+					JOIN variant_inventory vi ON vi.variant_id = pv.id AND vi.location_id = ? AND vi.quantity > 0
+					WHERE pv.deleted_at IS NULL
+				)
+			)
+		`, companyID, locationID, locationID)
+
+	if search := c.Query("search"); search != "" {
+		like := "%" + search + "%"
+		query = query.Where("products.name LIKE ? OR products.sku LIKE ?", like, like)
+	}
+
+	var total int64
+	query.Model(&models.Product{}).Count(&total)
+
+	var products []models.Product
+	if err := query.Offset(offset).Limit(limit).Find(&products).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve products"})
+		return
+	}
+
+	// Override each variant's stock with the location-specific quantity
+	for i := range products {
+		for j := range products[i].Variants {
+			if len(products[i].Variants[j].Inventory) > 0 {
+				products[i].Variants[j].Stock = products[i].Variants[j].Inventory[0].Quantity
+			} else {
+				products[i].Variants[j].Stock = 0
+			}
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message":     "Products at location retrieved successfully",
+		"location_id": locationID,
+		"data":        products,
+		"total":       total,
+		"page":        page,
+		"limit":       limit,
+	})
+}
+
 // ListTransfers returns stock transfer records with optional filters.
 // Query params: status, product_id, from_location_id, to_location_id, page, limit
 func ListTransfers(c *gin.Context) {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+
 	query := database.DB.
 		Preload("Product").
 		Preload("Variant").
 		Preload("FromLocation").
 		Preload("ToLocation").
-		Model(&models.StockTransfer{})
+		Model(&models.StockTransfer{}).
+		Where("company_id = ?", companyID)
 
 	if status := c.Query("status"); status != "" && status != "all" {
 		query = query.Where("status = ?", status)
@@ -82,18 +183,25 @@ func CreateTransfer(c *gin.Context) {
 		return
 	}
 
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+
 	if req.FromLocationID == req.ToLocationID {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Source and destination warehouse must be different"})
 		return
 	}
 
 	var product models.Product
-	if err := database.DB.First(&product, req.ProductID).Error; err != nil {
+	if err := database.DB.Where("id = ? AND company_id = ?", req.ProductID, companyID).First(&product).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Product not found"})
 		return
 	}
 
 	var transfer models.StockTransfer
+	transfer.CompanyID = companyID
 
 	err := database.DB.Transaction(func(tx *gorm.DB) error {
 		if req.VariantID != nil {
@@ -124,7 +232,12 @@ func CreateTransfer(c *gin.Context) {
 // CancelTransfer reverses stock and marks the transfer as Cancelled.
 func CancelTransfer(c *gin.Context) {
 	var transfer models.StockTransfer
-	if err := database.DB.First(&transfer, c.Param("id")).Error; err != nil {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&transfer).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Transfer not found"})
 		return
 	}
@@ -166,20 +279,54 @@ func CancelTransfer(c *gin.Context) {
 
 func moveVariantStock(tx *gorm.DB, req transferRequest, transfer *models.StockTransfer) error {
 	var source models.VariantInventory
-	if err := tx.Where("variant_id = ? AND location_id = ?", *req.VariantID, req.FromLocationID).First(&source).Error; err != nil {
-		return errInsufficientStock
-	}
-	if source.Quantity < req.Quantity {
-		return errInsufficientStock
-	}
-
-	// deduct source
-	if err := tx.Model(&source).Update("quantity", source.Quantity-req.Quantity).Error; err != nil {
-		return err
+	err := tx.Where("variant_id = ? AND location_id = ?", *req.VariantID, req.FromLocationID).First(&source).Error
+	if err != nil {
+		// No variant_inventory row yet — fall back to variant.stock if the product
+		// is at the requested from_location.
+		var variant models.ProductVariant
+		if err2 := tx.First(&variant, *req.VariantID); err2 != nil {
+			return errInsufficientStock
+		}
+		var product models.Product
+		if err2 := tx.First(&product, variant.ProductID); err2 != nil {
+			return errInsufficientStock
+		}
+		if product.LocationID == nil || *product.LocationID != req.FromLocationID {
+			return errInsufficientStock
+		}
+		if variant.Stock < req.Quantity {
+			return errInsufficientStock
+		}
+		// Seed variant_inventory from variant.stock, then deduct
+		source = models.VariantInventory{
+			VariantID:  *req.VariantID,
+			LocationID: req.FromLocationID,
+			Quantity:   variant.Stock - req.Quantity,
+		}
+		if err2 := tx.Create(&source).Error; err2 != nil {
+			return err2
+		}
+		// Also zero out the flat stock on the variant to keep it consistent
+		if err2 := tx.Model(&variant).Update("stock", variant.Stock-req.Quantity).Error; err2 != nil {
+			return err2
+		}
+	} else {
+		if source.Quantity < req.Quantity {
+			return errInsufficientStock
+		}
+		// deduct source
+		if err := tx.Model(&source).Update("quantity", source.Quantity-req.Quantity).Error; err != nil {
+			return err
+		}
 	}
 
 	// add to destination (create row if missing)
 	if err := upsertInventory(tx, *req.VariantID, req.ToLocationID, req.Quantity); err != nil {
+		return err
+	}
+
+	// Sync product_variants.stock = sum of all variant_inventory quantities
+	if err := syncVariantStock(tx, *req.VariantID); err != nil {
 		return err
 	}
 
@@ -206,7 +353,26 @@ func reverseVariantStock(tx *gorm.DB, t models.StockTransfer) error {
 	}
 
 	// restore to source
-	return upsertInventory(tx, *t.VariantID, t.FromLocationID, t.Quantity)
+	if err := upsertInventory(tx, *t.VariantID, t.FromLocationID, t.Quantity); err != nil {
+		return err
+	}
+
+	return syncVariantStock(tx, *t.VariantID)
+}
+
+// syncVariantStock keeps product_variants.stock in sync with the sum of all
+// variant_inventory quantities for that variant.
+func syncVariantStock(tx *gorm.DB, variantID uint) error {
+	var total int
+	if err := tx.Model(&models.VariantInventory{}).
+		Where("variant_id = ?", variantID).
+		Select("COALESCE(SUM(quantity), 0)").
+		Scan(&total).Error; err != nil {
+		return err
+	}
+	return tx.Model(&models.ProductVariant{}).
+		Where("id = ?", variantID).
+		Update("stock", total).Error
 }
 
 // upsertInventory adds qty to an existing variant_inventory row or creates one.

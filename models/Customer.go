@@ -8,11 +8,12 @@ import (
 
 type Customer struct {
 	ID           uint           `json:"id" gorm:"primaryKey;autoIncrement"`
+	CompanyID    uint           `json:"companyId" gorm:"column:company_id;not null;index"`
 	UserID       *uint          `json:"userId" gorm:"column:user_id"`
 	User         *User          `json:"user,omitempty" gorm:"foreignKey:UserID"`
-	Name         string         `json:"name" gorm:"not null"`
-	Email        string         `json:"email" gorm:"uniqueIndex;not null"`
-	Phone        string         `json:"phone"`
+	Name         string         `json:"name" gorm:"not null;type:varchar(255)"`
+	Email        string         `json:"email" gorm:"type:varchar(255);uniqueIndex:idx_customer_company_email,composite:company_id;not null"`
+	Phone        string         `json:"phone" gorm:"type:varchar(50)"`
 	Address      string         `json:"address"`
 	City         string         `json:"city"`
 	State        string         `json:"state"`

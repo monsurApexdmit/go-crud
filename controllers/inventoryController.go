@@ -6,16 +6,24 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go-crud/database"
+	"go-crud/middlewares"
 	"go-crud/models"
 )
 
 // ListInventory returns every product and its variants with per-warehouse stock.
 // Query params: search (name/sku), location_id (filter by warehouse), page, limit
 func ListInventory(c *gin.Context) {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+
 	query := database.DB.
 		Preload("Variants.Inventory.Location").
 		Preload("Location").
-		Model(&models.Product{})
+		Model(&models.Product{}).
+		Where("company_id = ?", companyID)
 
 	if search := c.Query("search"); search != "" {
 		like := "%" + search + "%"

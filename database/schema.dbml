@@ -1,0 +1,414 @@
+Table roles {
+  id integer [primary key]
+  name varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table users {
+  id integer [primary key]
+  name varchar
+  email varchar
+  password varchar
+  role_id integer
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+}
+
+Table authors {
+  id integer [primary key]
+  name varchar
+  bio text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table books {
+  id integer [primary key]
+  title varchar
+  author_id integer
+  description text
+  price decimal
+  stock integer
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+}
+
+Table categories {
+  id integer [primary key]
+  name varchar
+  parent_id integer
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+}
+
+Table attributes {
+  id integer [primary key]
+  name varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table coupons {
+  id integer [primary key]
+  campaign_name varchar
+  code varchar
+  discount decimal
+  discount_type enum
+  start_date timestamp
+  end_date timestamp
+  status enum
+  usage_limit integer
+  used_count integer
+  min_purchase_amount decimal
+  image varchar
+  created_at timestamp
+  deleted_at timestamp
+  updated_at timestamp
+}
+
+Table locations {
+  id integer [primary key]
+  name varchar
+  address varchar
+  is_active boolean
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table products {
+  id integer [primary key]
+  name varchar
+  description text
+  price decimal
+  stock_quantity integer
+  category_id integer
+  sku varchar
+  is_active boolean
+  is_featured boolean
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+}
+
+Table product_attributes {
+  id integer [primary key]
+  product_id integer
+  attribute_id integer
+  value varchar
+}
+
+Table product_variants {
+  id integer [primary key]
+  product_id integer
+  sku varchar
+  price decimal
+  stock_quantity integer
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+}
+
+Table variant_inventory {
+  id integer [primary key]
+  variant_id integer
+  location_id integer
+  quantity integer
+  last_updated timestamp
+}
+
+Table product_images {
+  id integer [primary key]
+  product_id integer
+  image_url varchar
+  is_primary boolean
+  created_at timestamp
+}
+
+Table customers {
+  id integer [primary key]
+  user_id integer
+  name varchar
+  email varchar
+  phone varchar
+  address text
+  reward_points integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table vendors {
+  id integer [primary key]
+  user_id integer
+  name varchar
+  contact_person varchar
+  email varchar
+  phone varchar
+  address text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table staff {
+  id integer [primary key]
+  user_id integer
+  name varchar
+  email varchar
+  phone varchar
+  position varchar
+  hire_date date
+  salary decimal
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table stock_transfers {
+  id integer [primary key]
+  from_location_id integer
+  to_location_id integer
+  product_id integer
+  variant_id integer
+  quantity integer
+  status enum
+  transferred_at timestamp
+  created_at timestamp
+}
+
+Table staff_roles {
+  id integer [primary key]
+  name varchar
+  description text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table salary_payments {
+  id integer [primary key]
+  staff_id integer
+  amount_paid decimal
+  payment_date date
+  payment_method varchar
+  remarks text
+  created_at timestamp
+}
+
+Table permissions {
+  id integer [primary key]
+  name varchar
+  resource varchar
+  action varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table role_permissions {
+  role_id integer
+  permission_id integer
+}
+
+Table sells {
+  id integer [primary key]
+  invoice_id varchar
+  customer_id integer
+  user_id integer
+  total_amount decimal
+  discount decimal
+  coupon_id integer
+  coupon_code varchar
+  tax decimal
+  final_amount decimal
+  paid_amount decimal
+  due_amount decimal
+  payment_method varchar
+  status enum
+  notes text
+  created_at timestamp
+  updated_at timestamp
+  shipping_address_id integer
+  payment_status enum
+  fulfillment_status enum
+  tracking_number varchar
+  carrier varchar
+  shipped_at timestamp
+  delivered_at timestamp
+  shipping_full_name varchar
+  shipping_phone varchar
+  shipping_email varchar
+  shipping_address_line1 varchar
+  shipping_address_line2 varchar
+  shipping_city varchar
+  shipping_state varchar
+  shipping_postal_code varchar
+  shipping_country varchar
+  shipping_address_type enum
+}
+
+Table order_items {
+  id integer [primary key]
+  sell_id integer
+  product_id integer
+  variant_id integer
+  quantity integer
+  unit_price decimal
+  subtotal decimal
+  discount decimal
+  tax decimal
+  total decimal
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table customer_returns {
+  id integer [primary key]
+  return_number varchar
+  order_id integer
+  customer_id integer
+  total_amount decimal
+  status enum
+  request_date timestamp
+  approved_date timestamp
+  rejected_date timestamp
+  completed_date timestamp
+  refunded_amount decimal
+  reason varchar
+  notes text
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+}
+
+Table customer_return_items {
+  id integer [primary key]
+  return_id integer
+  product_id integer
+  variant_id integer
+  product_name varchar
+  variant_name varchar
+  quantity integer
+  price decimal
+  reason varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table vendor_returns {
+  id integer [primary key]
+  return_number varchar
+  vendor_id integer
+  vendor_name varchar
+  total_amount decimal
+  status enum
+  return_date timestamp
+  completed_date timestamp
+  credit_type enum
+  notes text
+  created_by varchar
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+}
+
+Table vendor_return_items {
+  id integer [primary key]
+  return_id integer
+  product_id integer
+  variant_id integer
+  product_name varchar
+  variant_name varchar
+  quantity integer
+  unit_price decimal
+  total_price decimal
+  reason varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table shipping_addresses {
+  id integer [primary key]
+  customer_id integer
+  full_name varchar
+  phone varchar
+  email varchar
+  address_line1 varchar
+  address_line2 varchar
+  city varchar
+  state varchar
+  postal_code varchar
+  country varchar
+  is_default boolean
+  address_type enum
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+}
+
+Table order_shipments {
+  id integer [primary key]
+  sell_id integer
+  tracking_number varchar
+  carrier varchar
+  shipping_method varchar
+  status enum
+  shipped_at timestamp
+  estimated_delivery timestamp
+  delivered_at timestamp
+  shipping_cost decimal
+  weight decimal
+  dimensions varchar
+  notes text
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table shipment_tracking_history {
+  id integer [primary key]
+  shipment_id integer
+  status varchar
+  location varchar
+  description text
+  event_time timestamp
+  created_at timestamp
+}
+
+Ref: users.role_id > roles.id
+Ref: books.author_id > authors.id
+Ref: products.category_id > categories.id
+Ref: product_attributes.product_id > products.id
+Ref: product_attributes.attribute_id > attributes.id
+Ref: product_variants.product_id > products.id
+Ref: variant_inventory.variant_id > product_variants.id
+Ref: variant_inventory.location_id > locations.id
+Ref: product_images.product_id > products.id
+Ref: customers.user_id > users.id
+Ref: vendors.user_id > users.id
+Ref: staff.user_id > users.id
+Ref: stock_transfers.from_location_id > locations.id
+Ref: stock_transfers.to_location_id > locations.id
+Ref: stock_transfers.product_id > products.id
+Ref: stock_transfers.variant_id > product_variants.id
+Ref: salary_payments.staff_id > staff.id
+Ref: role_permissions.role_id > staff_roles.id
+Ref: role_permissions.permission_id > permissions.id
+Ref: sells.customer_id > customers.id
+Ref: sells.user_id > users.id
+Ref: sells.shipping_address_id > shipping_addresses.id
+Ref: order_items.sell_id > sells.id
+Ref: order_items.product_id > products.id
+Ref: order_items.variant_id > product_variants.id
+Ref: customer_returns.order_id > sells.id
+Ref: customer_returns.customer_id > customers.id
+Ref: customer_return_items.return_id > customer_returns.id
+Ref: customer_return_items.product_id > products.id
+Ref: customer_return_items.variant_id > product_variants.id
+Ref: vendor_returns.vendor_id > vendors.id
+Ref: vendor_return_items.return_id > vendor_returns.id
+Ref: vendor_return_items.product_id > products.id
+Ref: vendor_return_items.variant_id > product_variants.id
+Ref: shipping_addresses.customer_id > customers.id
+Ref: order_shipments.sell_id > sells.id
+Ref: shipment_tracking_history.shipment_id > order_shipments.id
+Ref: categories.parent_id > categories.id
+Ref: sells.coupon_id > coupons.id

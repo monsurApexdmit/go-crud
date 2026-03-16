@@ -3,7 +3,7 @@ package models
 import "time"
 
 type ProductImage struct {
-	ID        uint      `gorm:"primaryKey" json:"id"`
+	ID        uint      `gorm:"primaryKey;autoIncrement" json:"id"`
 	ProductID uint      `gorm:"index;not null" json:"product_id"`
 	Path      string    `gorm:"not null" json:"path"`
 	Position  int       `gorm:"not null;default:0" json:"position"`

@@ -6,13 +6,15 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go-crud/database"
+	"go-crud/middlewares"
 	"go-crud/models"
 )
 
 // ListSalaryPayments returns salary records with optional filters.
 // Query params: staff_id, month, status, page, limit
 func ListSalaryPayments(c *gin.Context) {
-	query := database.DB.Preload("Staff").Model(&models.SalaryPayment{})
+	companyID, _ := middlewares.GetCompanyID(c)
+	query := database.DB.Preload("Staff").Model(&models.SalaryPayment{}).Where("company_id = ?", companyID)
 
 	if staffID := c.Query("staff_id"); staffID != "" {
 		query = query.Where("staff_id = ?", staffID)
@@ -54,7 +56,8 @@ func ListSalaryPayments(c *gin.Context) {
 
 func GetSalaryPayment(c *gin.Context) {
 	var payment models.SalaryPayment
-	if err := database.DB.Preload("Staff").First(&payment, c.Param("id")).Error; err != nil {
+	companyID, _ := middlewares.GetCompanyID(c)
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).Preload("Staff").First(&payment).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Salary payment not found"})
 		return
 	}
@@ -81,9 +84,11 @@ func CreateSalaryPayment(c *gin.Context) {
 		return
 	}
 
+	companyID, _ := middlewares.GetCompanyID(c)
+
 	// verify staff exists
 	var staff models.Staff
-	if err := database.DB.First(&staff, req.StaffID).Error; err != nil {
+	if err := database.DB.Where("id = ? AND company_id = ?", req.StaffID, companyID).First(&staff).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Staff not found"})
 		return
 	}
@@ -97,6 +102,7 @@ func CreateSalaryPayment(c *gin.Context) {
 		PaymentDate:   req.PaymentDate,
 		PaymentMethod: req.PaymentMethod,
 		Notes:         req.Notes,
+		CompanyID:     companyID,
 	}
 
 	if err := database.DB.Create(&payment).Error; err != nil {
@@ -112,7 +118,8 @@ func CreateSalaryPayment(c *gin.Context) {
 // Accepts paidAmount and recalculates status automatically.
 func UpdateSalaryPayment(c *gin.Context) {
 	var payment models.SalaryPayment
-	if err := database.DB.First(&payment, c.Param("id")).Error; err != nil {
+	companyID, _ := middlewares.GetCompanyID(c)
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&payment).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Salary payment not found"})
 		return
 	}
@@ -144,7 +151,8 @@ func UpdateSalaryPayment(c *gin.Context) {
 
 func DeleteSalaryPayment(c *gin.Context) {
 	var payment models.SalaryPayment
-	if err := database.DB.First(&payment, c.Param("id")).Error; err != nil {
+	companyID, _ := middlewares.GetCompanyID(c)
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&payment).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Salary payment not found"})
 		return
 	}

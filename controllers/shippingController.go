@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go-crud/database"
+	"go-crud/middlewares"
 	"go-crud/models"
 	"gorm.io/gorm"
 )
@@ -18,6 +19,14 @@ import (
 func ListShippingAddresses(c *gin.Context) {
 	var addresses []models.ShippingAddress
 	query := database.DB.Model(&models.ShippingAddress{})
+
+	// Filter by company_id
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	query = query.Where("company_id = ?", companyID)
 
 	// Filter by customer ID
 	if customerID := c.Query("customer_id"); customerID != "" {
@@ -45,7 +54,14 @@ func ListShippingAddresses(c *gin.Context) {
 // GetShippingAddress retrieves a single shipping address
 func GetShippingAddress(c *gin.Context) {
 	var address models.ShippingAddress
-	if err := database.DB.Preload("Customer").First(&address, c.Param("id")).Error; err != nil {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	if err := database.DB.Preload("Customer").
+		Where("id = ? AND company_id = ?", c.Param("id"), companyID).
+		First(&address).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Shipping address not found"})
 		return
 	}
@@ -59,6 +75,14 @@ func CreateShippingAddress(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body", "details": err.Error()})
 		return
 	}
+
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+
+	address.CompanyID = companyID
 
 	// Validate required fields
 	if address.FullName == "" {
@@ -105,7 +129,12 @@ func CreateShippingAddress(c *gin.Context) {
 // UpdateShippingAddress updates an existing shipping address
 func UpdateShippingAddress(c *gin.Context) {
 	var address models.ShippingAddress
-	if err := database.DB.First(&address, c.Param("id")).Error; err != nil {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&address).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Shipping address not found"})
 		return
 	}
@@ -168,7 +197,12 @@ func UpdateShippingAddress(c *gin.Context) {
 // DeleteShippingAddress soft-deletes a shipping address
 func DeleteShippingAddress(c *gin.Context) {
 	var address models.ShippingAddress
-	if err := database.DB.First(&address, c.Param("id")).Error; err != nil {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&address).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Shipping address not found"})
 		return
 	}
@@ -180,7 +214,12 @@ func DeleteShippingAddress(c *gin.Context) {
 // SetDefaultShippingAddress sets an address as default for a customer
 func SetDefaultShippingAddress(c *gin.Context) {
 	var address models.ShippingAddress
-	if err := database.DB.First(&address, c.Param("id")).Error; err != nil {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&address).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Shipping address not found"})
 		return
 	}
@@ -208,6 +247,14 @@ func SetDefaultShippingAddress(c *gin.Context) {
 func ListOrderShipments(c *gin.Context) {
 	var shipments []models.OrderShipment
 	query := database.DB.Model(&models.OrderShipment{})
+
+	// Filter by company_id
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	query = query.Where("company_id = ?", companyID)
 
 	// Filter by sell/order ID
 	if sellID := c.Query("sell_id"); sellID != "" {
@@ -270,6 +317,11 @@ func ListOrderShipments(c *gin.Context) {
 // GetOrderShipment retrieves a single shipment with full tracking history
 func GetOrderShipment(c *gin.Context) {
 	var shipment models.OrderShipment
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
 	if err := database.DB.
 		Preload("Sell").
 		Preload("Sell.Customer").
@@ -277,7 +329,8 @@ func GetOrderShipment(c *gin.Context) {
 		Preload("TrackingHistory", func(db *gorm.DB) *gorm.DB {
 			return db.Order("event_time DESC")
 		}).
-		First(&shipment, c.Param("id")).Error; err != nil {
+		Where("id = ? AND company_id = ?", c.Param("id"), companyID).
+		First(&shipment).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Shipment not found"})
 		return
 	}
@@ -291,6 +344,14 @@ func CreateOrderShipment(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body", "details": err.Error()})
 		return
 	}
+
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+
+	shipment.CompanyID = companyID
 
 	// Validate required fields
 	if shipment.SellID == 0 {
@@ -370,7 +431,12 @@ func CreateOrderShipment(c *gin.Context) {
 // UpdateShipmentStatus updates the status of a shipment
 func UpdateShipmentStatus(c *gin.Context) {
 	var shipment models.OrderShipment
-	if err := database.DB.First(&shipment, c.Param("id")).Error; err != nil {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&shipment).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Shipment not found"})
 		return
 	}
@@ -460,7 +526,12 @@ func UpdateShipmentStatus(c *gin.Context) {
 // AddTrackingEvent adds a tracking event to shipment history
 func AddTrackingEvent(c *gin.Context) {
 	var shipment models.OrderShipment
-	if err := database.DB.First(&shipment, c.Param("id")).Error; err != nil {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&shipment).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Shipment not found"})
 		return
 	}
@@ -525,18 +596,25 @@ func GetShipmentStats(c *gin.Context) {
 		AvgDeliveryDays float64 `json:"avgDeliveryDays"`
 	}
 
-	database.DB.Model(&models.OrderShipment{}).Count(&stats.Total)
-	database.DB.Model(&models.OrderShipment{}).Where("status = ?", "pending").Count(&stats.Pending)
-	database.DB.Model(&models.OrderShipment{}).Where("status = ?", "in_transit").Count(&stats.InTransit)
-	database.DB.Model(&models.OrderShipment{}).Where("status = ?", "delivered").Count(&stats.Delivered)
-	database.DB.Model(&models.OrderShipment{}).Where("status = ?", "failed").Count(&stats.Failed)
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+
+	database.DB.Model(&models.OrderShipment{}).Where("company_id = ?", companyID).Count(&stats.Total)
+	database.DB.Model(&models.OrderShipment{}).Where("status = ? AND company_id = ?", "pending", companyID).Count(&stats.Pending)
+	database.DB.Model(&models.OrderShipment{}).Where("status = ? AND company_id = ?", "in_transit", companyID).Count(&stats.InTransit)
+	database.DB.Model(&models.OrderShipment{}).Where("status = ? AND company_id = ?", "delivered", companyID).Count(&stats.Delivered)
+	database.DB.Model(&models.OrderShipment{}).Where("status = ? AND company_id = ?", "failed", companyID).Count(&stats.Failed)
 	database.DB.Model(&models.OrderShipment{}).
+		Where("company_id = ?", companyID).
 		Select("COALESCE(SUM(shipping_cost), 0)").Scan(&stats.TotalShipCost)
 
 	// Calculate average delivery time (in days) for delivered shipments
 	var avgDays float64
 	database.DB.Model(&models.OrderShipment{}).
-		Where("status = ? AND shipped_at IS NOT NULL AND delivered_at IS NOT NULL", "delivered").
+		Where("status = ? AND company_id = ? AND shipped_at IS NOT NULL AND delivered_at IS NOT NULL", "delivered", companyID).
 		Select("AVG(TIMESTAMPDIFF(DAY, shipped_at, delivered_at))").
 		Scan(&avgDays)
 	stats.AvgDeliveryDays = avgDays

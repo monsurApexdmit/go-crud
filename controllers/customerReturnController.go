@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go-crud/database"
+	"go-crud/middlewares"
 	"go-crud/models"
 	"gorm.io/gorm"
 )
@@ -17,6 +18,14 @@ import (
 func ListCustomerReturns(c *gin.Context) {
 	var returns []models.CustomerReturn
 	query := database.DB.Model(&models.CustomerReturn{})
+
+	// Filter by company_id
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	query = query.Where("company_id = ?", companyID)
 
 	// Search by return number, customer name, or order number
 	if search := c.Query("search"); search != "" {
@@ -70,9 +79,28 @@ func ListCustomerReturns(c *gin.Context) {
 // GetCustomerReturn retrieves a single customer return by ID
 func GetCustomerReturn(c *gin.Context) {
 	var ret models.CustomerReturn
-	if err := database.DB.Preload("Customer").Preload("Items").First(&ret, c.Param("id")).Error; err != nil {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	if err := database.DB.
+		Preload("Customer").
+		Preload("Items.Product").
+		Preload("Items.Variant").
+		Where("id = ? AND company_id = ?", c.Param("id"), companyID).
+		First(&ret).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Customer return not found"})
 		return
+	}
+	// Fill productName/variantName from relations if stored value is empty
+	for i := range ret.Items {
+		if ret.Items[i].ProductName == "" && ret.Items[i].Product != nil {
+			ret.Items[i].ProductName = ret.Items[i].Product.Name
+		}
+		if ret.Items[i].VariantName == "" && ret.Items[i].Variant != nil {
+			ret.Items[i].VariantName = ret.Items[i].Variant.Name
+		}
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Customer return fetched successfully", "data": ret})
 }
@@ -85,6 +113,14 @@ func CreateCustomerReturn(c *gin.Context) {
 		return
 	}
 
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+
+	ret.CompanyID = companyID
+
 	// Generate return number if not provided
 	if ret.ReturnNumber == "" {
 		ret.ReturnNumber = generateCustomerReturnNumber()
@@ -93,12 +129,6 @@ func CreateCustomerReturn(c *gin.Context) {
 	// Set request date to now if not provided
 	if ret.RequestDate.IsZero() {
 		ret.RequestDate = time.Now()
-	}
-
-	// Validate required fields
-	if ret.CustomerName == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Customer name is required"})
-		return
 	}
 
 	// Validate status
@@ -118,6 +148,22 @@ func CreateCustomerReturn(c *gin.Context) {
 		return
 	}
 
+	// Auto-fill productName/variantName from DB if not provided
+	for i := range ret.Items {
+		if ret.Items[i].ProductName == "" && ret.Items[i].ProductID != nil {
+			var p models.Product
+			if database.DB.Select("name").First(&p, *ret.Items[i].ProductID).Error == nil {
+				ret.Items[i].ProductName = p.Name
+			}
+		}
+		if ret.Items[i].VariantName == "" && ret.Items[i].VariantID != nil {
+			var v models.ProductVariant
+			if database.DB.Select("name").First(&v, *ret.Items[i].VariantID).Error == nil {
+				ret.Items[i].VariantName = v.Name
+			}
+		}
+	}
+
 	// Create return and items in transaction
 	err := database.DB.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Create(&ret).Error; err != nil {
@@ -134,14 +180,19 @@ func CreateCustomerReturn(c *gin.Context) {
 		return
 	}
 
-	database.DB.Preload("Customer").Preload("Items").First(&ret, ret.ID)
+	database.DB.Preload("Customer").Preload("Items.Product").Preload("Items.Variant").First(&ret, ret.ID)
 	c.JSON(http.StatusCreated, gin.H{"message": "Customer return created successfully", "data": ret})
 }
 
 // UpdateCustomerReturn updates an existing customer return
 func UpdateCustomerReturn(c *gin.Context) {
 	var ret models.CustomerReturn
-	if err := database.DB.First(&ret, c.Param("id")).Error; err != nil {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&ret).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Customer return not found"})
 		return
 	}
@@ -180,7 +231,12 @@ func UpdateCustomerReturn(c *gin.Context) {
 // ApproveCustomerReturn approves a customer return
 func ApproveCustomerReturn(c *gin.Context) {
 	var ret models.CustomerReturn
-	if err := database.DB.First(&ret, c.Param("id")).Error; err != nil {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&ret).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Customer return not found"})
 		return
 	}
@@ -190,18 +246,18 @@ func ApproveCustomerReturn(c *gin.Context) {
 		return
 	}
 
-	var input struct {
-		ProcessedBy string `json:"processedBy" binding:"required"`
-	}
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "ProcessedBy is required"})
-		return
-	}
+	// var input struct {
+	// 	ProcessedBy string `json:"processedBy" binding:"required"`
+	// }
+	// if err := c.ShouldBindJSON(&input); err != nil {
+	// 	c.JSON(http.StatusBadRequest, gin.H{"error": "ProcessedBy is required"})
+	// 	return
+	// }
 
 	now := time.Now()
 	ret.Status = "approved"
 	ret.ProcessedDate = &now
-	ret.ProcessedBy = input.ProcessedBy
+	// ret.ProcessedBy = input.ProcessedBy
 
 	// Load items for inventory update
 	var items []models.CustomerReturnItem
@@ -269,7 +325,12 @@ func ApproveCustomerReturn(c *gin.Context) {
 // RejectCustomerReturn rejects a customer return
 func RejectCustomerReturn(c *gin.Context) {
 	var ret models.CustomerReturn
-	if err := database.DB.First(&ret, c.Param("id")).Error; err != nil {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&ret).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Customer return not found"})
 		return
 	}
@@ -280,18 +341,18 @@ func RejectCustomerReturn(c *gin.Context) {
 	}
 
 	var input struct {
-		ProcessedBy string `json:"processedBy" binding:"required"`
+		// ProcessedBy string `json:"processedBy" binding:"required"`
 		Notes       string `json:"notes"`
 	}
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "ProcessedBy is required"})
-		return
-	}
+	// if err := c.ShouldBindJSON(&input); err != nil {
+	// 	c.JSON(http.StatusBadRequest, gin.H{"error": "ProcessedBy is required"})
+	// 	return
+	// }
 
 	now := time.Now()
 	ret.Status = "rejected"
 	ret.ProcessedDate = &now
-	ret.ProcessedBy = input.ProcessedBy
+	// ret.ProcessedBy = input.ProcessedBy
 	if input.Notes != "" {
 		ret.Notes = input.Notes
 	}
@@ -308,7 +369,12 @@ func RejectCustomerReturn(c *gin.Context) {
 // DeleteCustomerReturn soft-deletes a customer return
 func DeleteCustomerReturn(c *gin.Context) {
 	var ret models.CustomerReturn
-	if err := database.DB.First(&ret, c.Param("id")).Error; err != nil {
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&ret).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Customer return not found"})
 		return
 	}
@@ -328,13 +394,19 @@ func GetCustomerReturnStats(c *gin.Context) {
 		TotalRefundAmount float64 `json:"totalRefundAmount"`
 	}
 
-	database.DB.Model(&models.CustomerReturn{}).Count(&stats.Total)
-	database.DB.Model(&models.CustomerReturn{}).Where("status = ?", "pending").Count(&stats.Pending)
-	database.DB.Model(&models.CustomerReturn{}).Where("status = ?", "approved").Count(&stats.Approved)
-	database.DB.Model(&models.CustomerReturn{}).Where("status = ?", "rejected").Count(&stats.Rejected)
-	database.DB.Model(&models.CustomerReturn{}).Where("status = ?", "completed").Count(&stats.Completed)
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+
+	database.DB.Model(&models.CustomerReturn{}).Where("company_id = ?", companyID).Count(&stats.Total)
+	database.DB.Model(&models.CustomerReturn{}).Where("status = ? AND company_id = ?", "pending", companyID).Count(&stats.Pending)
+	database.DB.Model(&models.CustomerReturn{}).Where("status = ? AND company_id = ?", "approved", companyID).Count(&stats.Approved)
+	database.DB.Model(&models.CustomerReturn{}).Where("status = ? AND company_id = ?", "rejected", companyID).Count(&stats.Rejected)
+	database.DB.Model(&models.CustomerReturn{}).Where("status = ? AND company_id = ?", "completed", companyID).Count(&stats.Completed)
 	database.DB.Model(&models.CustomerReturn{}).
-		Where("status IN ?", []string{"approved", "completed"}).
+		Where("status IN ? AND company_id = ?", []string{"approved", "completed"}, companyID).
 		Select("COALESCE(SUM(total_amount), 0)").Scan(&stats.TotalRefundAmount)
 
 	c.JSON(http.StatusOK, gin.H{"message": "Statistics retrieved successfully", "data": stats})
@@ -345,7 +417,13 @@ func GetCustomerReturnsByCustomer(c *gin.Context) {
 	var returns []models.CustomerReturn
 	customerID := c.Param("customerId")
 
-	if err := database.DB.Where("customer_id = ?", customerID).
+	companyID, ok := middlewares.GetCompanyID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Company ID not found in context"})
+		return
+	}
+
+	if err := database.DB.Where("customer_id = ? AND company_id = ?", customerID, companyID).
 		Preload("Customer").Preload("Items").
 		Order("request_date DESC").
 		Find(&returns).Error; err != nil {

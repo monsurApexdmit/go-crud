@@ -7,13 +7,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"go-crud/database"
+	"go-crud/middlewares"
 	"go-crud/models"
 )
 
 func ListStaff(c *gin.Context) {
 	var staffList []models.Staff
 
-	query := database.DB.Preload("User").Preload("User.Role").Model(&models.Staff{})
+	companyID, _ := middlewares.GetCompanyID(c)
+	query := database.DB.Preload("User").Preload("User.Role").Model(&models.Staff{}).Where("company_id = ?", companyID)
 
 	if search := c.Query("search"); search != "" {
 		like := "%" + search + "%"
@@ -55,7 +57,8 @@ func ListStaff(c *gin.Context) {
 
 func GetStaff(c *gin.Context) {
 	var staff models.Staff
-	if err := database.DB.Preload("User").Preload("User.Role").First(&staff, c.Param("id")).Error; err != nil {
+	companyID, _ := middlewares.GetCompanyID(c)
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).Preload("User").Preload("User.Role").First(&staff).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Staff not found"})
 		return
 	}
@@ -73,6 +76,9 @@ func CreateStaff(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Name and email are required"})
 		return
 	}
+
+	companyID, _ := middlewares.GetCompanyID(c)
+	staff.CompanyID = companyID
 
 	// Create linked user with Staff role (id=5)
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte("changeme"), bcrypt.DefaultCost)
@@ -103,7 +109,8 @@ func CreateStaff(c *gin.Context) {
 
 func UpdateStaff(c *gin.Context) {
 	var staff models.Staff
-	if err := database.DB.First(&staff, c.Param("id")).Error; err != nil {
+	companyID, _ := middlewares.GetCompanyID(c)
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&staff).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Staff not found"})
 		return
 	}
@@ -136,7 +143,8 @@ func UpdateStaff(c *gin.Context) {
 
 func DeleteStaff(c *gin.Context) {
 	var staff models.Staff
-	if err := database.DB.First(&staff, c.Param("id")).Error; err != nil {
+	companyID, _ := middlewares.GetCompanyID(c)
+	if err := database.DB.Where("id = ? AND company_id = ?", c.Param("id"), companyID).First(&staff).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Staff not found"})
 		return
 	}

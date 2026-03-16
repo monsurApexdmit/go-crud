@@ -10,6 +10,9 @@ services:
       DB_USER: admin
       DB_PASSWORD: admin123
       DB_NAME: go
+      JWT_SECRET: your-super-secret-jwt-key-change-this
+      GIN_MODE: debug
+      USE_HTTPS: "true"
     ports:
       - "8004:8004"
     volumes:

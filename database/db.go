@@ -7,14 +7,17 @@ import (
 
     "gorm.io/driver/mysql"
     "gorm.io/gorm"
-    // "github.com/joho/godotenv"
+    "github.com/joho/godotenv"
     // "go-crud/models"
 )
 
 var DB *gorm.DB
 
 func Connect() {
-    // godotenv.Load()  // Load .env file if needed
+    // Load .env file
+    if err := godotenv.Load(); err != nil {
+        log.Println("Warning: .env file not found, using environment variables")
+    }
 
     dbHost := os.Getenv("DB_HOST")
     dbPort := os.Getenv("DB_PORT")

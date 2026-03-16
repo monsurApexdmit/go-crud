@@ -41,6 +41,22 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		c.Set("user_id", claims["user_id"])
+		c.Set("company_id", claims["company_id"])
+		c.Set("email", claims["email"])
 		c.Next()
 	}
+}
+
+// GetCompanyID extracts the company_id from the Gin context
+// Returns uint and bool (ok) for safe type assertion
+func GetCompanyID(c *gin.Context) (uint, bool) {
+	raw, exists := c.Get("company_id")
+	if !exists {
+		return 0, false
+	}
+	id, ok := raw.(float64)
+	if !ok {
+		return 0, false
+	}
+	return uint(id), true
 }

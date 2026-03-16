@@ -78,6 +78,11 @@ func (s ProductService) GetProduct(id uint) (models.Product, error) {
 	return s.repo.FindByID(id)
 }
 
+// GetProductByCompany loads a single product by ID with company_id check.
+func (s ProductService) GetProductByCompany(id, companyID uint) (models.Product, error) {
+	return s.repo.FindByIDAndCompany(id, companyID)
+}
+
 // --- Create ---
 
 // CreateProduct validates, persists the product and its relations, saves images, and reloads.
@@ -87,6 +92,7 @@ func (s ProductService) CreateProduct(
 	galleryFiles []*multipart.FileHeader,
 	attributesJSON string,
 	variantsJSON string,
+	companyID uint,
 	c *gin.Context,
 ) (models.Product, error) {
 	if form.Name == "" {
@@ -129,6 +135,7 @@ func (s ProductService) CreateProduct(
 		Barcode:       form.Barcode,
 		Published:     form.Published,
 		ReceiptNumber: form.ReceiptNumber,
+		CompanyID:     companyID,
 	}
 
 	if ids := parseAttributeIDs(attributesJSON); len(ids) > 0 {
@@ -139,11 +146,40 @@ func (s ProductService) CreateProduct(
 		product.Attributes = attrs
 	}
 
-	product.Variants = parseVariants(0, variantsJSON) // ProductID set by GORM after insert
-
 	// --- 4. DB transaction ---
+	// Do NOT assign Variants before Create — ProductID is 0 until after insert,
+	// which causes unique-index violations when multiple variants share empty barcode.
 	if err := s.repo.Transaction(func(tx *gorm.DB) error {
-		return s.repo.Create(tx, &product)
+		// Create product first (gets its ID)
+		if err := s.repo.Create(tx, &product); err != nil {
+			return err
+		}
+		// Now insert variants with the correct ProductID
+		variants := parseVariants(product.ID, variantsJSON)
+		if len(variants) > 0 {
+			if err := s.repo.CreateVariants(tx, variants); err != nil {
+				return fmt.Errorf("failed to create variants: %w", err)
+			}
+			// Seed variant_inventory so inventory list shows correct stock immediately
+			if form.LocationID != nil {
+				inventory := make([]models.VariantInventory, 0, len(variants))
+				for _, v := range variants {
+					if v.Stock > 0 {
+						inventory = append(inventory, models.VariantInventory{
+							VariantID:  v.ID,
+							LocationID: *form.LocationID,
+							Quantity:   v.Stock,
+						})
+					}
+				}
+				if len(inventory) > 0 {
+					if err := s.repo.CreateVariantInventory(tx, inventory); err != nil {
+						return fmt.Errorf("failed to seed variant inventory: %w", err)
+					}
+				}
+			}
+		}
+		return nil
 	}); err != nil {
 		s.cleanupTemps(mainTmp, hasMainImage, galleryTmps)
 		log.Printf("CreateProduct: db create: %v", err)
@@ -210,6 +246,7 @@ func (s ProductService) CreateProduct(
 // UpdateProduct applies partial field updates, replaces images, and reloads.
 func (s ProductService) UpdateProduct(
 	id uint,
+	companyID uint,
 	updates map[string]interface{},
 	mainImage *multipart.FileHeader,
 	galleryFiles []*multipart.FileHeader,
@@ -217,7 +254,7 @@ func (s ProductService) UpdateProduct(
 	variantsJSON string,
 	c *gin.Context,
 ) (models.Product, error) {
-	product, err := s.repo.FindByID(id)
+	product, err := s.repo.FindByIDAndCompany(id, companyID)
 	if err != nil {
 		return models.Product{}, err // caller maps gorm.ErrRecordNotFound → 404
 	}
@@ -266,6 +303,30 @@ func (s ProductService) UpdateProduct(
 				}
 				if err := s.repo.CreateVariants(tx, variants); err != nil {
 					return err
+				}
+				// Reseed variant_inventory at the product's current location
+				locationID := product.LocationID
+				if lid, ok := updates["location_id"]; ok {
+					if v, ok2 := lid.(uint); ok2 {
+						locationID = &v
+					}
+				}
+				if locationID != nil {
+					inventory := make([]models.VariantInventory, 0, len(variants))
+					for _, v := range variants {
+						if v.Stock > 0 {
+							inventory = append(inventory, models.VariantInventory{
+								VariantID:  v.ID,
+								LocationID: *locationID,
+								Quantity:   v.Stock,
+							})
+						}
+					}
+					if len(inventory) > 0 {
+						if err := s.repo.CreateVariantInventory(tx, inventory); err != nil {
+							return fmt.Errorf("failed to reseed variant inventory: %w", err)
+						}
+					}
 				}
 			}
 		}
@@ -371,8 +432,8 @@ func (s ProductService) DeleteProduct(id uint) error {
 // --- Status ---
 
 // TogglePublished flips the published flag on a single product.
-func (s ProductService) TogglePublished(id uint, published bool) (models.Product, error) {
-	if _, err := s.repo.FindByID(id); err != nil {
+func (s ProductService) TogglePublished(id, companyID uint, published bool) (models.Product, error) {
+	if _, err := s.repo.FindByIDAndCompany(id, companyID); err != nil {
 		return models.Product{}, err
 	}
 
@@ -381,6 +442,32 @@ func (s ProductService) TogglePublished(id uint, published bool) (models.Product
 	}
 
 	return s.repo.FindByID(id)
+}
+
+// DeleteProductByCompany soft-deletes a product after checking company ownership.
+func (s ProductService) DeleteProductByCompany(id, companyID uint) error {
+	product, err := s.repo.FindByIDAndCompany(id, companyID)
+	if err != nil {
+		return err
+	}
+
+	// Fetch images for deletion
+	product, err = s.repo.FindByIDWithImages(id)
+	if err != nil {
+		return err
+	}
+
+	if err := s.repo.SoftDelete(&product); err != nil {
+		return fmt.Errorf("failed to delete product: %w", err)
+	}
+
+	// best-effort file cleanup
+	s.fs.RemoveFile(product.Image)
+	for _, img := range product.Images {
+		s.fs.RemoveFile(img.Path)
+	}
+
+	return nil
 }
 
 // --- helpers ---

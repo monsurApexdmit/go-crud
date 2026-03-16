@@ -10,11 +10,12 @@ func (Staff) TableName() string { return "staff" }
 
 type Staff struct {
 	ID            uint           `json:"id" gorm:"primaryKey;autoIncrement"`
+	CompanyID     uint           `json:"companyId" gorm:"column:company_id;not null;index"`
 	UserID        *uint          `json:"userId" gorm:"column:user_id"`
 	User          *User          `json:"user,omitempty" gorm:"foreignKey:UserID"`
-	Name          string         `json:"name" gorm:"not null"`
-	Email         string         `json:"email" gorm:"uniqueIndex;not null"`
-	Contact       string         `json:"contact"`
+	Name          string         `json:"name" gorm:"not null;type:varchar(255)"`
+	Email         string         `json:"email" gorm:"type:varchar(255);uniqueIndex:idx_staff_company_email,composite:company_id;not null"`
+	Contact       string         `json:"contact" gorm:"type:varchar(50)"`
 	JoiningDate   string         `json:"joiningDate" gorm:"column:joining_date"`
 	Role          string         `json:"role"`
 	Status        string         `json:"status" gorm:"type:enum('Active','Inactive');default:Active"`

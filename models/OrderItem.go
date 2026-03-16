@@ -9,8 +9,9 @@ type OrderItem struct {
 	Product     *Product        `json:"product,omitempty" gorm:"foreignKey:ProductID"`
 	VariantID   *uint           `json:"variantId,omitempty" gorm:"column:variant_id"`
 	Variant     *ProductVariant `json:"variant,omitempty" gorm:"foreignKey:VariantID"`
-	ProductName string          `json:"productName" gorm:"column:product_name;not null"`
-	VariantName string          `json:"variantName,omitempty" gorm:"column:variant_name"`
+	InventoryID *uint           `json:"inventoryId,omitempty" gorm:"column:inventory_id"`
+	ProductName string          `json:"productName" gorm:"type:varchar(255);column:product_name;not null"`
+	VariantName string          `json:"variantName,omitempty" gorm:"type:varchar(255);column:variant_name"`
 	Quantity    int             `json:"quantity" gorm:"not null;default:1"`
 	UnitPrice   float64         `json:"unitPrice" gorm:"column:unit_price;not null;default:0"`
 	TotalPrice  float64         `json:"totalPrice" gorm:"column:total_price;not null;default:0"`

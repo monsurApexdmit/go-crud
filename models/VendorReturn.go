@@ -27,10 +27,11 @@ func (VendorReturnItem) TableName() string { return "vendor_return_items" }
 
 type VendorReturn struct {
 	ID            uint               `json:"id" gorm:"primaryKey;autoIncrement"`
-	ReturnNumber  string             `json:"returnNumber" gorm:"column:return_number;uniqueIndex;not null"`
+	CompanyID     uint               `json:"companyId" gorm:"column:company_id;not null;index"`
+	ReturnNumber  string             `json:"returnNumber" gorm:"type:varchar(100);column:return_number;uniqueIndex;not null"`
 	VendorID      uint               `json:"vendorId" gorm:"column:vendor_id;not null"`
 	Vendor        *Vendor            `json:"vendor,omitempty" gorm:"foreignKey:VendorID"`
-	VendorName    string             `json:"vendorName" gorm:"column:vendor_name;not null"`
+	VendorName    string             `json:"vendorName" gorm:"type:varchar(255);column:vendor_name;not null"`
 	Items         []VendorReturnItem `json:"items,omitempty" gorm:"foreignKey:ReturnID"`
 	TotalAmount   float64            `json:"totalAmount" gorm:"column:total_amount;not null;default:0"`
 	Status        string             `json:"status" gorm:"not null;default:'pending'"`
@@ -38,7 +39,7 @@ type VendorReturn struct {
 	CompletedDate *time.Time         `json:"completedDate,omitempty" gorm:"column:completed_date"`
 	CreditType    string             `json:"creditType" gorm:"column:credit_type;not null"`
 	Notes         string             `json:"notes,omitempty" gorm:"type:text"`
-	CreatedBy     string             `json:"createdBy" gorm:"column:created_by;not null"`
+	CreatedBy     string             `json:"createdBy,omitempty" gorm:"column:created_by"`
 	CreatedAt     time.Time          `json:"createdAt" gorm:"autoCreateTime"`
 	UpdatedAt     time.Time          `json:"updatedAt" gorm:"autoUpdateTime"`
 	DeletedAt     gorm.DeletedAt     `json:"-" gorm:"index"`

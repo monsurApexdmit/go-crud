@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"go-crud/database"
+	"go-crud/middlewares"
 	"go-crud/models"
 	"net/http"
 
@@ -11,7 +12,8 @@ import (
 // ListLocations retrieves all locations
 func ListLocations(c *gin.Context) {
 	var locations []models.Location
-	if err := database.DB.Find(&locations).Error; err != nil {
+	companyID, _ := middlewares.GetCompanyID(c)
+	if err := database.DB.Where("company_id = ?", companyID).Find(&locations).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve locations"})
 		return
 	}
@@ -24,7 +26,8 @@ func GetLocation(c *gin.Context) {
 	id := c.Param("id")
 	var location models.Location
 
-	if err := database.DB.First(&location, id).Error; err != nil {
+	companyID, _ := middlewares.GetCompanyID(c)
+	if err := database.DB.Where("id = ? AND company_id = ?", id, companyID).First(&location).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Location not found"})
 		return
 	}
@@ -42,6 +45,9 @@ func CreateLocation(c *gin.Context) {
 		})
 		return
 	}
+
+	companyID, _ := middlewares.GetCompanyID(c)
+	location.CompanyID = companyID
 
 	// Save to DB
 	if err := database.DB.Create(&location).Error; err != nil {
@@ -61,8 +67,9 @@ func CreateLocation(c *gin.Context) {
 func UpdateLocation(c *gin.Context) {
 	id := c.Param("id")
 
+	companyID, _ := middlewares.GetCompanyID(c)
 	var location models.Location
-	if err := database.DB.First(&location, id).Error; err != nil {
+	if err := database.DB.Where("id = ? AND company_id = ?", id, companyID).First(&location).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Location not found"})
 		return
 	}
@@ -117,7 +124,8 @@ func DeleteLocation(c *gin.Context) {
 	id := c.Param("id")
 	var location models.Location
 
-	if err := database.DB.First(&location, id).Error; err != nil {
+	companyID, _ := middlewares.GetCompanyID(c)
+	if err := database.DB.Where("id = ? AND company_id = ?", id, companyID).First(&location).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Location not found"})
 		return
 	}
